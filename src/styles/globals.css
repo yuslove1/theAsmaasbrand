@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Inter:wght@300;400;500;600&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-cormorant: 'Cormorant Garamond', serif;
+  --font-inter: 'Inter', sans-serif;
+  --font-amiri: 'Amiri', serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--font-inter);
+    background-color: #FAF7F2;
+    color: #0A1628;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-cormorant);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-wine text-white px-6 py-3 font-body font-medium tracking-wide
+           hover:bg-brand-rose transition-all duration-300 rounded-none
+           border border-brand-wine hover:border-brand-rose;
+  }
+
+  .btn-gold {
+    @apply bg-brand-gold text-brand-navy px-6 py-3 font-body font-semibold tracking-widest
+           text-sm uppercase hover:bg-brand-gold2 transition-all duration-300;
+  }
+
+  .btn-outline {
+    @apply border border-brand-navy text-brand-navy px-6 py-3 font-body font-medium
+           hover:bg-brand-navy hover:text-white transition-all duration-300;
+  }
+
+  .section-heading {
+    @apply font-display text-4xl md:text-5xl font-light text-brand-navy leading-tight;
+  }
+
+  .gold-divider {
+    @apply w-16 h-0.5 bg-brand-gold mx-auto my-4;
+  }
+
+  .arabic-accent {
+    @apply font-arabic text-brand-gold opacity-70 select-none;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  .product-card {
+    @apply bg-white overflow-hidden cursor-pointer card-hover;
+  }
+
+  .nav-link {
+    @apply text-sm font-body font-medium tracking-widest uppercase text-brand-navy/80
+           hover:text-brand-wine transition-colors duration-200 relative
+           after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px
+           after:bg-brand-wine after:transition-all after:duration-300
+           hover:after:w-full;
+  }
+
+  .input-field {
+    @apply w-full border border-brand-stone bg-white px-4 py-3 text-sm font-body
+           focus:outline-none focus:border-brand-blue transition-colors duration-200
+           placeholder:text-brand-navy/40;
+  }
+
+  .admin-card {
+    @apply bg-white border border-brand-stone p-6 shadow-sm;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #FAF7F2; }
+::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 3px; }
+
+/* Gold shimmer text */
+.text-gold-shimmer {
+  background: linear-gradient(90deg, #C9A84C, #E8C97E, #C9A84C);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes shimmer {
+  to { background-position: 200% center; }
+}
