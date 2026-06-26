@@ -1,15 +1,18 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ShoppingBag, Menu, X, Search } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const itemCount = useCart((s) => s.itemCount)
   const pathname = usePathname()
+  const router = useRouter()
 
   const isAdmin = pathname.startsWith('/admin')
 
@@ -78,9 +81,12 @@ export default function Navbar() {
 
           {/* Right icons */}
           <div className="flex items-center gap-4">
-            <button className={`hidden md:flex transition-colors ${
-              scrolled ? 'text-brand-navy hover:text-brand-wine' : 'text-white/80 hover:text-white'
-            }`}>
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className={`transition-colors ${
+                scrolled ? 'text-brand-navy hover:text-brand-wine' : 'text-white/80 hover:text-white'
+              }`}
+            >
               <Search size={20} />
             </button>
 
@@ -107,6 +113,42 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Search bar */}
+      {searchOpen && (
+        <div className="bg-white border-t border-brand-stone px-4 sm:px-6 py-3">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault()
+              if (searchQuery.trim()) {
+                router.push(`/shop?q=${encodeURIComponent(searchQuery.trim())}`)
+                setSearchOpen(false)
+                setSearchQuery('')
+              }
+            }}
+            className="max-w-2xl mx-auto flex gap-2"
+          >
+            <div className="relative flex-1">
+              <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-brand-navy/40" />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search products..."
+                className="input-field pl-9 py-2.5 text-sm"
+              />
+            </div>
+            <button type="submit" className="btn-primary text-xs px-5">Search</button>
+            <button
+              type="button"
+              onClick={() => { setSearchOpen(false); setSearchQuery('') }}
+              className="text-brand-navy/40 hover:text-brand-navy transition-colors"
+            >
+              <X size={20} />
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Mobile menu */}
       {menuOpen && (
