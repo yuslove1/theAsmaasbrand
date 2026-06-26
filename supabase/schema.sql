@@ -123,8 +123,13 @@ CREATE POLICY "Public can read featured collection products"
 CREATE POLICY "Public can place orders"
   ON orders FOR INSERT WITH CHECK (TRUE);
 
--- Service role (admin) has full access — handled server-side via SUPABASE_SERVICE_ROLE_KEY
--- No additional policies needed since service role bypasses RLS
+-- Service role (admin) has full access — bypasses RLS
+-- Explicit grants needed so PostgreSQL roles can access the tables
+GRANT USAGE ON SCHEMA public TO anon, authenticated, service_role;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO service_role;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO service_role;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO anon;
+GRANT INSERT ON orders TO anon;
 
 -- ─── AUTO UPDATE updated_at ───────────────────────────────────
 CREATE OR REPLACE FUNCTION update_updated_at()
