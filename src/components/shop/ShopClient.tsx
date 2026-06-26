@@ -26,37 +26,57 @@ function ProductCard({ product }: { product: Product }) {
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
         />
-        {product.is_featured && (
-          <span className="absolute top-3 left-3 bg-brand-wine text-white text-[10px] tracking-widest uppercase px-2 py-0.5 font-body">
-            Featured
+        {/* Badges */}
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          {product.is_featured && (
+            <span className="bg-brand-wine text-white text-[10px] tracking-widest uppercase px-2 py-0.5 font-body w-fit">
+              Featured
+            </span>
+          )}
+          <span className="bg-brand-navy/80 text-white text-[10px] tracking-wider capitalize px-2 py-0.5 font-body w-fit">
+            {product.category.join(' · ')}
           </span>
-        )}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-end justify-center pb-4 opacity-0 group-hover:opacity-100">
+        </div>
+
+        {/* Hover overlay with actions */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-end pb-4 gap-2">
           <button
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault()
               addItem(product)
-              toast.success(`${product.name} added to cart!`, {
-                icon: '🛍️',
-              })
+              toast.success(`${product.name} added to cart!`, { icon: '🛍️' })
             }}
             className="btn-gold text-xs py-2 flex items-center gap-1"
           >
             <ShoppingBag size={14} /> Add to Cart
           </button>
+          <Link
+            href={`/shop/${product.slug}`}
+            className="text-white/80 hover:text-white text-[10px] tracking-widest uppercase font-body transition-colors"
+          >
+            View Details →
+          </Link>
         </div>
       </div>
-      <div className="p-4 border border-t-0 border-brand-stone">
+      <div className="p-3 sm:p-4 border border-t-0 border-brand-stone">
         <Link href={`/shop/${product.slug}`}>
-          <h3 className="font-display text-lg text-brand-navy hover:text-brand-wine transition-colors">
+          <h3 className="font-display text-base sm:text-lg text-brand-navy hover:text-brand-wine transition-colors line-clamp-1">
             {product.name}
           </h3>
         </Link>
-        <p className="text-brand-navy/40 text-xs font-body mt-1 uppercase tracking-wider">
+        <p className="text-brand-navy/40 text-[10px] sm:text-xs font-body mt-1 uppercase tracking-wider line-clamp-1">
           {product.subcategory}
         </p>
-        <p className="font-body font-semibold text-brand-wine mt-2">
-          ₦{product.price.toLocaleString()}
-        </p>
+        <div className="flex items-center justify-between mt-2">
+          <p className="font-body font-semibold text-brand-wine">
+            ₦{product.price.toLocaleString()}
+          </p>
+          {product.images.length > 1 && (
+            <span className="text-brand-navy/30 text-[10px] font-body">
+              {product.images.length} photos
+            </span>
+          )}
+        </div>
       </div>
     </div>
   )
