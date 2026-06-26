@@ -178,6 +178,28 @@ export async function POST(req: NextRequest) {
   }
 }
 
+export async function PUT(req: NextRequest) {
+  const auth = req.headers.get('x-admin-key')
+  if (auth !== process.env.ADMIN_SECRET_KEY) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const body = await req.json()
+  const { id, ...rest } = body
+  if (!id) return NextResponse.json({ error: 'Missing order id' }, { status: 400 })
+
+  const db = supabaseAdmin()
+  const { data, error } = await db
+    .from('orders')
+    .update({ ...rest, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single()
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  return NextResponse.json(data)
+}
+
 export async function GET() {
   const db = supabaseAdmin()
   const { data, error } = await db
