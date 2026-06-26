@@ -5,6 +5,7 @@ import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://theasmaasbrand.vercel.app'),
   title: 'The Asmaa\'s Brand — Best of Your Choices',
   description:
     'Dealer in all kinds of Scarves, Abayas, Jalabias, Inner Caps, Hijabs, Hijab Pins, Islamic Essentials, Islamic Art & Signs, and Gift Items. Based in Lagos, Nigeria.',

@@ -27,7 +27,8 @@ export default function AdminFeatured() {
   const generateToken = () => Math.random().toString(36).substring(2, 10)
 
   const featured = products.filter((p) => p.is_featured)
-  const shareUrl = `${window?.location?.origin}/featured/${shareToken}`
+  const origin = typeof window !== 'undefined' ? window.location.origin : ''
+  const shareUrl = `${origin}/featured/${shareToken}`
 
   const toggleFeatured = async (product: Product) => {
     setLoading(true)
