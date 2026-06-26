@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'The Asmaa\'s Brand',
     description: '...best of your choices',
-    images: ['/og-image.jpg'],
+    images: ['/images/theasmaasbrand.jpeg'],
   },
 }
 

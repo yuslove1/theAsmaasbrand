@@ -1,27 +1,63 @@
 'use client'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 
+const heroImages = [
+  { src: '/images/asmaasLogo.jpeg', alt: "The Asmaa's Brand logo" },
+  { src: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=1800&q=85', alt: 'Islamic calligraphy' },
+  { src: '/images/men_jalab.jpeg', alt: 'Premium jalabias collection' },
+]
+
 export default function HeroSection() {
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % heroImages.length)
+    }, 6000)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden">
-      {/* Background image */}
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=1800&q=85"
-          alt="Islamic fashion and calligraphy"
-          fill
-          className="object-cover object-center"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/95 via-brand-navy/85 to-brand-navy/70" />
+      {/* Background images with crossfade */}
+      {heroImages.map((img, i) => (
+        <div
+          key={img.src}
+          className={`absolute inset-0 z-0 transition-opacity duration-1000 ${
+            i === current ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          <Image
+            src={img.src}
+            alt={img.alt}
+            fill
+            className="object-cover object-center"
+            priority={i === 0}
+          />
+        </div>
+      ))}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-brand-navy/95 via-brand-navy/85 to-brand-navy/70" />
+
+      {/* Slide indicators */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+        {heroImages.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrent(i)}
+            className={`h-1 rounded-full transition-all duration-500 ${
+              i === current ? 'w-8 bg-brand-gold' : 'w-3 bg-white/30'
+            }`}
+          />
+        ))}
       </div>
 
       {/* Decorative Arabic text watermark */}
       <div
-        className="absolute right-8 top-1/2 -translate-y-1/2 text-white/5 text-[180px] leading-none select-none pointer-events-none hidden lg:block"
+        className="absolute right-8 top-1/2 -translate-y-1/2 text-white/5 text-[180px] leading-none select-none pointer-events-none hidden lg:block z-[2]"
         style={{ fontFamily: 'var(--font-amiri)' }}
       >
         أسماء
@@ -83,7 +119,7 @@ export default function HeroSection() {
       </div>
 
       {/* Scroll cue */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-40">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 opacity-40 z-10">
         <div className="w-px h-10 bg-white animate-pulse" />
         <p className="text-white text-[10px] tracking-widest uppercase font-body">Scroll</p>
       </div>

@@ -13,7 +13,7 @@ const categories = [
     title: 'Men\'s Collection',
     subtitle: 'Jalabias · Inner Caps · Islamic Essentials',
     href: '/shop?gender=men',
-    image: 'https://images.unsplash.com/photo-1561756432-95ae6e06515e?w=800&q=80',
+    image: '/images/men_jalab.jpeg',
     arabic: 'مجموعة الرجال',
   },
   {

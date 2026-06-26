@@ -8,7 +8,7 @@ export default function AboutSection() {
       <section id="about" className="py-24 bg-brand-navy text-white overflow-hidden relative">
         {/* Decorative Arabic watermark */}
         <div
-          className="absolute left-0 top-1/2 -translate-y-1/2 text-white/3 text-[200px] select-none pointer-events-none leading-none hidden lg:block"
+          className="absolute -left-10 top-1/2 -translate-y-1/2 text-white/[0.02] text-[160px] select-none pointer-events-none leading-none hidden xl:block"
           style={{ fontFamily: 'var(--font-amiri)' }}
         >
           جودة
@@ -65,8 +65,8 @@ export default function AboutSection() {
               </div>
               <div className="relative overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1561756432-95ae6e06515e?w=600&q=80"
-                  alt="Man in thobe and taqiyah"
+                  src="/images/men_cap&jalab.jpeg"
+                  alt="Jalabias and inner caps collection"
                   fill
                   className="object-cover"
                 />
