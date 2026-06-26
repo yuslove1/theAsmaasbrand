@@ -63,11 +63,8 @@
   }
 
   .nav-link {
-    @apply text-sm font-body font-medium tracking-widest uppercase text-brand-navy/80
-           hover:text-brand-wine transition-colors duration-200 relative
-           after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px
-           after:bg-brand-wine after:transition-all after:duration-300
-           hover:after:w-full;
+    @apply text-sm font-body font-medium tracking-widest uppercase
+           transition-colors duration-200;
   }
 
   .input-field {

@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { ShoppingBag, Menu, X, Search } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 
@@ -8,12 +9,17 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const itemCount = useCart((s) => s.itemCount)
+  const pathname = usePathname()
+
+  const isAdmin = pathname.startsWith('/admin')
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', handler)
     return () => window.removeEventListener('scroll', handler)
   }, [])
+
+  if (isAdmin) return null
 
   return (
     <header
@@ -24,8 +30,8 @@ export default function Navbar() {
       }`}
     >
       {/* Top bar */}
-      <div className="bg-brand-navy text-brand-gold text-center py-1.5 text-xs tracking-widest uppercase font-body">
-        <span className="arabic-accent mr-2 text-base">بسم الله</span>
+      <div className="bg-brand-navy text-brand-gold text-center py-1.5 text-[10px] sm:text-xs tracking-widest uppercase font-body px-4">
+        <span className="arabic-accent mr-2 text-base hidden sm:inline">بسم الله</span>
         Free delivery within Lagos · WhatsApp: 08143378187
       </div>
 
@@ -34,7 +40,9 @@ export default function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex flex-col leading-none">
             <span
-              className="font-display text-2xl font-semibold text-brand-navy tracking-tight"
+              className={`font-display text-2xl font-semibold tracking-tight transition-colors duration-500 ${
+                scrolled ? 'text-brand-navy' : 'text-white'
+              }`}
               style={{ fontFamily: 'var(--font-cormorant)' }}
             >
               The Asmaa&apos;s Brand
@@ -46,20 +54,39 @@ export default function Navbar() {
 
           {/* Desktop nav */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/shop?gender=women" className="nav-link">Women</Link>
-            <Link href="/shop?gender=men" className="nav-link">Men</Link>
-            <Link href="/featured" className="nav-link">Featured</Link>
-            <Link href="/#about" className="nav-link">About</Link>
-            <Link href="/#contact" className="nav-link">Contact</Link>
+            {[
+              { label: 'Women', href: '/shop?gender=women' },
+              { label: 'Men', href: '/shop?gender=men' },
+              { label: 'Featured', href: '/featured' },
+              { label: 'About', href: '/#about' },
+              { label: 'Contact', href: '/#contact' },
+            ].map(({ label, href }) => (
+              <Link
+                key={label}
+                href={href}
+                className={`text-sm font-body font-medium tracking-widest uppercase transition-colors duration-300 relative
+                  after:absolute after:bottom-0 after:left-0 after:w-0 after:h-px after:transition-all after:duration-300 hover:after:w-full ${
+                  scrolled
+                    ? 'text-brand-navy/80 hover:text-brand-wine after:bg-brand-wine'
+                    : 'text-white/80 hover:text-white after:bg-white'
+                }`}
+              >
+                {label}
+              </Link>
+            ))}
           </nav>
 
           {/* Right icons */}
           <div className="flex items-center gap-4">
-            <button className="hidden md:flex text-brand-navy hover:text-brand-wine transition-colors">
+            <button className={`hidden md:flex transition-colors ${
+              scrolled ? 'text-brand-navy hover:text-brand-wine' : 'text-white/80 hover:text-white'
+            }`}>
               <Search size={20} />
             </button>
 
-            <Link href="/cart" className="relative text-brand-navy hover:text-brand-wine transition-colors">
+            <Link href="/cart" className={`relative transition-colors ${
+              scrolled ? 'text-brand-navy hover:text-brand-wine' : 'text-white/80 hover:text-white'
+            }`}>
               <ShoppingBag size={22} />
               {itemCount() > 0 && (
                 <span className="absolute -top-2 -right-2 bg-brand-wine text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
@@ -70,7 +97,9 @@ export default function Navbar() {
 
             {/* Mobile menu btn */}
             <button
-              className="md:hidden text-brand-navy"
+              className={`md:hidden transition-colors ${
+                scrolled ? 'text-brand-navy' : 'text-white'
+              }`}
               onClick={() => setMenuOpen(!menuOpen)}
             >
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
@@ -82,19 +111,20 @@ export default function Navbar() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-brand-stone px-6 py-4 space-y-4">
-          {['Women', 'Men', 'Featured', 'About', 'Contact'].map((item) => (
+          {[
+            { label: 'Women', href: '/shop?gender=women' },
+            { label: 'Men', href: '/shop?gender=men' },
+            { label: 'Featured', href: '/featured' },
+            { label: 'About', href: '/#about' },
+            { label: 'Contact', href: '/#contact' },
+          ].map(({ label, href }) => (
             <Link
-              key={item}
-              href={
-                item === 'Women' ? '/shop?gender=women' :
-                item === 'Men'   ? '/shop?gender=men' :
-                item === 'Featured' ? '/featured' :
-                item === 'About' ? '/#about' : '/#contact'
-              }
-              className="block nav-link py-1"
+              key={label}
+              href={href}
+              className="block text-sm font-body font-medium tracking-widest uppercase text-brand-navy/80 hover:text-brand-wine transition-colors py-1"
               onClick={() => setMenuOpen(false)}
             >
-              {item}
+              {label}
             </Link>
           ))}
         </div>
