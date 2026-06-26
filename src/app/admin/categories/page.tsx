@@ -56,16 +56,16 @@ export default function AdminCategories() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="font-display text-3xl text-brand-navy">Categories</h1>
+          <h1 className="font-display text-2xl sm:text-3xl text-brand-navy">Categories</h1>
           <p className="text-brand-navy/50 text-sm font-body mt-1">
             Organise your products into categories
           </p>
         </div>
         <button
           onClick={() => setShowForm(true)}
-          className="btn-primary flex items-center gap-2"
+          className="btn-primary flex items-center gap-2 w-fit"
         >
           <Plus size={18} /> Add Category
         </button>
@@ -139,7 +139,7 @@ export default function AdminCategories() {
       )}
 
       {/* Categories display */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
         {/* Women */}
         <div className="admin-card">
           <div className="flex items-center gap-3 mb-4 pb-4 border-b border-brand-stone">

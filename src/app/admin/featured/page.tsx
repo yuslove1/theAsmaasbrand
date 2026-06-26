@@ -69,14 +69,14 @@ export default function AdminFeatured() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="font-display text-3xl text-brand-navy">Featured Items</h1>
+        <h1 className="font-display text-2xl sm:text-3xl text-brand-navy">Featured Items</h1>
         <p className="text-brand-navy/50 text-sm font-body mt-1">
           Toggle which products appear in the &quot;Items of the Week&quot; section
         </p>
       </div>
 
       {/* Share panel */}
-      <div className="bg-brand-navy p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-brand-navy p-4 sm:p-6 mb-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <p className="text-brand-gold text-xs tracking-widest uppercase font-body mb-1">
             Shareable Link
@@ -86,7 +86,7 @@ export default function AdminFeatured() {
           </p>
           <p className="text-white/40 text-xs font-body mt-1 break-all max-w-sm">{shareUrl}</p>
         </div>
-        <div className="flex gap-3 flex-shrink-0">
+        <div className="flex gap-3 flex-shrink-0 flex-wrap">
           <button
             onClick={copyShareLink}
             className="flex items-center gap-2 border border-white/20 text-white px-4 py-2 text-xs tracking-widest uppercase font-body hover:border-brand-gold hover:text-brand-gold transition-all"

@@ -56,12 +56,12 @@ export default async function AdminDashboard() {
       </div>
 
       {/* Revenue */}
-      <div className="bg-brand-navy text-white p-6 mb-6 flex items-center justify-between">
+      <div className="bg-brand-navy text-white p-4 sm:p-6 mb-6 flex items-center justify-between">
         <div>
           <p className="text-white/50 text-xs tracking-widest uppercase font-body">Total Revenue</p>
-          <p className="font-display text-4xl text-brand-gold mt-1">₦{stats.revenue.toLocaleString()}</p>
+          <p className="font-display text-2xl sm:text-4xl text-brand-gold mt-1">₦{stats.revenue.toLocaleString()}</p>
         </div>
-        <p className="arabic-accent text-5xl opacity-20" style={{ fontFamily: 'var(--font-amiri)' }}>
+        <p className="arabic-accent text-3xl sm:text-5xl opacity-20 hidden sm:block" style={{ fontFamily: 'var(--font-amiri)' }}>
           بركة
         </p>
       </div>

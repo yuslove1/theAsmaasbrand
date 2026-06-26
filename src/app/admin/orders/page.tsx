@@ -59,7 +59,7 @@ export default function AdminOrders() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="font-display text-3xl text-brand-navy">Orders</h1>
+        <h1 className="font-display text-2xl sm:text-3xl text-brand-navy">Orders</h1>
         <p className="text-brand-navy/50 text-sm font-body mt-1">
           {orders.length} total orders · {orders.filter((o) => o.order_status === 'pending').length} pending
         </p>
@@ -71,7 +71,7 @@ export default function AdminOrders() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-4 py-1.5 text-xs tracking-widest uppercase font-body transition-colors capitalize ${
+            className={`px-4 py-1.5 text-xs tracking-widest capitalize font-body transition-colors ${
               filter === s
                 ? 'bg-brand-navy text-white'
                 : 'border border-brand-stone text-brand-navy hover:border-brand-navy'
@@ -121,8 +121,8 @@ export default function AdminOrders() {
 
             {/* Expanded detail */}
             {expanded === order.id && (
-              <div className="border-t border-brand-stone p-5 bg-brand-cream/30">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+              <div className="border-t border-brand-stone p-3 sm:p-5 bg-brand-cream/30">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6">
                   {/* Customer */}
                   <div>
                     <p className="text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-3">
@@ -216,7 +216,7 @@ export default function AdminOrders() {
                   <p className="text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-3">
                     Items Ordered
                   </p>
-                  <div className="border border-brand-stone overflow-hidden">
+                  <div className="border border-brand-stone overflow-x-auto">
                     <table className="w-full text-sm font-body">
                       <thead className="bg-brand-navy text-white">
                         <tr>

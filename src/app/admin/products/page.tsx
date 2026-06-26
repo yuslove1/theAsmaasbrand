@@ -123,14 +123,14 @@ export default function AdminProducts() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="font-display text-3xl text-brand-navy">Products</h1>
+          <h1 className="font-display text-2xl sm:text-3xl text-brand-navy">Products</h1>
           <p className="text-brand-navy/50 text-sm font-body mt-1">{products.length} products total</p>
         </div>
         <button
           onClick={() => { setForm(emptyForm); setEditId(null); setShowForm(true) }}
-          className="btn-primary flex items-center gap-2"
+          className="btn-primary flex items-center gap-2 w-fit"
         >
           <Plus size={18} /> Add Product
         </button>
@@ -138,8 +138,8 @@ export default function AdminProducts() {
 
       {/* Form modal */}
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-4 overflow-y-auto">
-          <div className="bg-white w-full max-w-2xl my-8 relative">
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center p-2 sm:p-4 overflow-y-auto">
+          <div className="bg-white w-full max-w-2xl my-2 sm:my-8 relative">
             <div className="flex items-center justify-between p-6 border-b border-brand-stone">
               <h2 className="font-display text-2xl text-brand-navy">
                 {editId ? 'Edit Product' : 'New Product'}
@@ -149,9 +149,9 @@ export default function AdminProducts() {
               </button>
             </div>
 
-            <div className="p-6 space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2">
+            <div className="p-4 sm:p-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2">
                   <label className="block text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-1">
                     Product Name *
                   </label>
@@ -230,7 +230,7 @@ export default function AdminProducts() {
                   </label>
                 </div>
 
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <label className="block text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-1">
                     Description
                   </label>
@@ -244,7 +244,7 @@ export default function AdminProducts() {
                 </div>
 
                 {/* Image upload */}
-                <div className="col-span-2">
+                <div className="sm:col-span-2">
                   <label className="block text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-1">
                     Product Images
                   </label>
@@ -289,14 +289,14 @@ export default function AdminProducts() {
       )}
 
       {/* Products table */}
-      <div className="admin-card overflow-x-auto">
-        <table className="w-full text-sm font-body">
+      <div className="admin-card overflow-x-auto -mx-4 sm:mx-0">
+        <table className="w-full text-sm font-body min-w-[600px]">
           <thead>
             <tr className="border-b border-brand-stone">
               <th className="text-left py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider">Product</th>
-              <th className="text-left py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider">Category</th>
+              <th className="text-left py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider hidden sm:table-cell">Category</th>
               <th className="text-left py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider">Price</th>
-              <th className="text-left py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider">Featured</th>
+              <th className="text-left py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider hidden md:table-cell">Featured</th>
               <th className="text-left py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider">Status</th>
               <th className="text-right py-3 px-2 text-brand-navy/50 font-medium text-xs uppercase tracking-wider">Actions</th>
             </tr>
@@ -309,15 +309,15 @@ export default function AdminProducts() {
                     <div className="relative w-10 h-12 bg-brand-stone flex-shrink-0 overflow-hidden">
                       {p.images[0] && <Image src={p.images[0]} alt="" fill className="object-cover" />}
                     </div>
-                    <div>
-                      <p className="font-medium text-brand-navy">{p.name}</p>
-                      <p className="text-brand-navy/40 text-xs">{p.subcategory}</p>
+                    <div className="min-w-0">
+                      <p className="font-medium text-brand-navy truncate">{p.name}</p>
+                      <p className="text-brand-navy/40 text-xs truncate">{p.subcategory}</p>
                     </div>
                   </div>
                 </td>
-                <td className="py-3 px-2 capitalize">{p.category.join(', ')}</td>
-                <td className="py-3 px-2 font-semibold text-brand-wine">₦{p.price.toLocaleString()}</td>
-                <td className="py-3 px-2">
+                <td className="py-3 px-2 capitalize hidden sm:table-cell">{p.category.join(', ')}</td>
+                <td className="py-3 px-2 font-semibold text-brand-wine whitespace-nowrap">₦{p.price.toLocaleString()}</td>
+                <td className="py-3 px-2 hidden md:table-cell">
                   {p.is_featured ? <Star size={16} className="text-brand-gold fill-brand-gold" /> : '—'}
                 </td>
                 <td className="py-3 px-2">
