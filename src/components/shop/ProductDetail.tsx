@@ -22,7 +22,7 @@ export default function ProductDetail({ product, related }: Props) {
 
   const images = product.images.length > 0
     ? product.images
-    : ['https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=700']
+    : ['https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=700']
 
   return (
     <div className="min-h-screen bg-brand-cream pt-20">
@@ -159,7 +159,7 @@ export default function ProductDetail({ product, related }: Props) {
                 <Link key={p.id} href={`/shop/${p.slug}`} className="product-card group block">
                   <div className="relative aspect-[3/4] bg-brand-stone overflow-hidden">
                     <Image
-                      src={p.images[0] || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400'}
+                      src={p.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=400'}
                       alt={p.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-500"

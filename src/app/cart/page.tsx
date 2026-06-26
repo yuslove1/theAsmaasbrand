@@ -24,17 +24,17 @@ export default function CartPage() {
   return (
     <div className="min-h-screen bg-brand-cream pt-28">
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <h1 className="font-display text-4xl text-brand-navy mb-2">Your Cart</h1>
+        <h1 className="font-display text-3xl sm:text-4xl text-brand-navy mb-2">Your Cart</h1>
         <div className="w-12 h-0.5 bg-brand-gold mb-8" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
           {/* Items */}
           <div className="lg:col-span-2 space-y-4">
             {items.map(({ product, quantity, note }) => (
-              <div key={product.id} className="bg-white border border-brand-stone p-4 flex gap-4">
-                <div className="relative w-24 h-32 flex-shrink-0 bg-brand-stone overflow-hidden">
+              <div key={product.id} className="bg-white border border-brand-stone p-3 sm:p-4 flex gap-3 sm:gap-4">
+                <div className="relative w-20 h-28 sm:w-24 sm:h-32 flex-shrink-0 bg-brand-stone overflow-hidden">
                   <Image
-                    src={product.images[0] || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200'}
+                    src={product.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=200'}
                     alt={product.name}
                     fill
                     className="object-cover"

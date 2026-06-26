@@ -15,7 +15,7 @@ function ProductCard({ product }: { product: Product }) {
     <div className="product-card group">
       <div className="relative aspect-[3/4] overflow-hidden">
         <Image
-          src={product.images[0] || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600'}
+          src={product.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=600'}
           alt={product.name}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"

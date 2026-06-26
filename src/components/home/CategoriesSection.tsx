@@ -6,14 +6,14 @@ const categories = [
     title: 'Women\'s Collection',
     subtitle: 'Abayas · Hijabs · Scarves · Pins',
     href: '/shop?gender=women',
-    image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1561442748-c50715dc32f6?w=800&q=80',
     arabic: 'مجموعة النساء',
   },
   {
     title: 'Men\'s Collection',
     subtitle: 'Jalabias · Inner Caps · Islamic Essentials',
     href: '/shop?gender=men',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1561756432-95ae6e06515e?w=800&q=80',
     arabic: 'مجموعة الرجال',
   },
   {

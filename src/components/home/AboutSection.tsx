@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import Link from 'next/link'
 import { MapPin, Mail, Phone, MessageCircle } from 'lucide-react'
 
 export default function AboutSection() {
@@ -49,8 +48,8 @@ export default function AboutSection() {
           <div className="grid grid-cols-2 gap-3 h-96">
             <div className="relative rounded-none overflow-hidden">
               <Image
-                src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?w=600&q=80"
-                alt="Women's Islamic fashion"
+                src="https://images.unsplash.com/photo-1561442748-c50715dc32f6?w=600&q=80"
+                alt="Woman in abaya and hijab"
                 fill
                 className="object-cover"
               />
@@ -66,8 +65,8 @@ export default function AboutSection() {
               </div>
               <div className="relative overflow-hidden">
                 <Image
-                  src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
-                  alt="Fashion items"
+                  src="https://images.unsplash.com/photo-1561756432-95ae6e06515e?w=600&q=80"
+                  alt="Man in thobe and taqiyah"
                   fill
                   className="object-cover"
                 />

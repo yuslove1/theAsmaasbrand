@@ -10,14 +10,13 @@ export default function HeroSection() {
       {/* Background image */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1800&q=85"
-          alt="Islamic fashion hero"
+          src="https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=1800&q=85"
+          alt="Islamic fashion and calligraphy"
           fill
           className="object-cover object-center"
           priority
         />
-        {/* Overlay — navy to wine gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/92 via-brand-navy/70 to-brand-wine/50" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-navy/95 via-brand-navy/85 to-brand-navy/70" />
       </div>
 
       {/* Decorative Arabic text watermark */}
@@ -44,7 +43,7 @@ export default function HeroSection() {
             مرحباً بكم
           </p>
 
-          <h1 className="font-display text-5xl md:text-7xl text-white font-light leading-tight mb-2">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl text-white font-light leading-tight mb-2">
             The Asmaa&apos;s{' '}
             <span className="text-gold-shimmer font-semibold italic">Brand</span>
           </h1>
@@ -55,7 +54,7 @@ export default function HeroSection() {
 
           <p className="font-body text-white/70 text-base md:text-lg leading-relaxed mb-10 max-w-lg">
             Elegant Islamic fashion for women &amp; men. Abayas, Jalabias, Hijabs,
-            Scarves, Islamic Essentials &amp; Gift Items — curated with quality in mind.
+            Scarves, Islamic Essentials &amp; Gift Items curated with quality in mind.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4">
@@ -68,15 +67,15 @@ export default function HeroSection() {
           </div>
 
           {/* Stats row */}
-          <div className="flex gap-10 mt-14 border-t border-white/10 pt-8">
+          <div className="flex flex-wrap gap-6 sm:gap-10 mt-14 border-t border-white/10 pt-8">
             {[
               { label: 'Products', value: '200+' },
               { label: 'Happy Customers', value: '1,000+' },
               { label: 'Locations', value: '2 in Lagos' },
             ].map(({ label, value }) => (
               <div key={label}>
-                <p className="font-display text-3xl text-brand-gold">{value}</p>
-                <p className="text-white/40 text-xs uppercase tracking-widest font-body mt-1">{label}</p>
+                <p className="font-display text-2xl sm:text-3xl text-brand-gold">{value}</p>
+                <p className="text-white/40 text-[10px] sm:text-xs uppercase tracking-widest font-body mt-1">{label}</p>
               </div>
             ))}
           </div>

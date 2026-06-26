@@ -87,7 +87,7 @@ export default async function FeaturedPage({ params }: Props) {
               >
                 <div className="relative aspect-[3/4] bg-brand-stone overflow-hidden">
                   <Image
-                    src={product.images[0] || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500'}
+                    src={product.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=500'}
                     alt={product.name}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"

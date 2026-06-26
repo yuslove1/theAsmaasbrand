@@ -21,7 +21,7 @@ function ProductCard({ product }: { product: Product }) {
     <div className="product-card group">
       <div className="relative aspect-[3/4] overflow-hidden bg-brand-stone">
         <Image
-          src={product.images[0] || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500'}
+          src={product.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=500'}
           alt={product.name}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -87,7 +87,7 @@ export default function ShopClient({ products, categories, searchParams }: Props
         >
           متجر
         </div>
-        <h1 className="font-display text-5xl text-white font-light relative z-10">
+        <h1 className="font-display text-3xl sm:text-5xl text-white font-light relative z-10">
           {searchParams.gender === 'women' ? 'Women\'s Collection' :
            searchParams.gender === 'men'   ? 'Men\'s Collection' : 'All Collections'}
         </h1>
@@ -111,13 +111,13 @@ export default function ShopClient({ products, categories, searchParams }: Props
             />
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             {/* Gender tabs */}
             {['all', 'women', 'men'].map((g) => (
               <button
                 key={g}
                 onClick={() => updateFilter('gender', g === 'all' ? '' : g)}
-                className={`px-4 py-2 text-xs tracking-widest uppercase font-body transition-colors ${
+                className={`px-3 sm:px-4 py-2 text-xs tracking-widest uppercase font-body transition-colors ${
                   (g === 'all' && !searchParams.gender) || searchParams.gender === g
                     ? 'bg-brand-navy text-white'
                     : 'border border-brand-stone text-brand-navy hover:border-brand-navy'
@@ -138,7 +138,7 @@ export default function ShopClient({ products, categories, searchParams }: Props
 
         {/* Category filters */}
         {showFilters && (
-          <div className="mb-8 p-5 border border-brand-stone bg-white grid grid-cols-2 gap-6">
+          <div className="mb-8 p-4 sm:p-5 border border-brand-stone bg-white grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <p className="text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-3">
                 Women&apos;s Categories

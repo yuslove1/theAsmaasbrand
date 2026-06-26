@@ -82,7 +82,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-brand-cream pt-28">
       <div className="max-w-5xl mx-auto px-6 py-10">
-        <h1 className="font-display text-4xl text-brand-navy mb-2">Checkout</h1>
+        <h1 className="font-display text-3xl sm:text-4xl text-brand-navy mb-2">Checkout</h1>
         <div className="w-12 h-0.5 bg-brand-gold mb-8" />
 
         <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -231,7 +231,7 @@ export default function CheckoutPage() {
                   <div key={product.id} className="flex gap-3">
                     <div className="relative w-14 h-16 bg-brand-stone flex-shrink-0 overflow-hidden">
                       <Image
-                        src={product.images[0] || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=100'}
+                        src={product.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=100'}
                         alt={product.name}
                         fill
                         className="object-cover"
