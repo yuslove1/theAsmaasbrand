@@ -2,11 +2,14 @@ import HeroSection from '@/components/home/HeroSection'
 import CategoriesSection from '@/components/home/CategoriesSection'
 import FeaturedSection from '@/components/home/FeaturedSection'
 import AboutSection from '@/components/home/AboutSection'
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import type { Product } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 async function getFeaturedProducts(): Promise<Product[]> {
-  const { data, error } = await supabase
+  const db = supabaseAdmin()
+  const { data, error } = await db
     .from('products')
     .select('*')
     .eq('is_featured', true)
@@ -19,7 +22,8 @@ async function getFeaturedProducts(): Promise<Product[]> {
 }
 
 async function getActiveShareToken(): Promise<string> {
-  const { data } = await supabase
+  const db = supabaseAdmin()
+  const { data } = await db
     .from('featured_collections')
     .select('share_token')
     .eq('active', true)

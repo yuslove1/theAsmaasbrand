@@ -1,13 +1,16 @@
-import { supabase } from '@/lib/supabase'
+import { supabaseAdmin } from '@/lib/supabase'
 import type { Product, Category } from '@/types'
 import ShopClient from '@/components/shop/ShopClient'
+
+export const dynamic = 'force-dynamic'
 
 interface Props {
   searchParams: { gender?: string; category?: string; q?: string }
 }
 
 async function getProducts(gender?: string, category?: string, q?: string): Promise<Product[]> {
-  let query = supabase
+  const db = supabaseAdmin()
+  let query = db
     .from('products')
     .select('*')
     .eq('is_available', true)
@@ -23,7 +26,8 @@ async function getProducts(gender?: string, category?: string, q?: string): Prom
 }
 
 async function getCategories(): Promise<Category[]> {
-  const { data } = await supabase.from('categories').select('*').order('name')
+  const db = supabaseAdmin()
+  const { data } = await db.from('categories').select('*').order('name')
   return data || []
 }
 
