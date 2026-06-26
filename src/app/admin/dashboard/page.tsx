@@ -1,5 +1,5 @@
 import { supabaseAdmin } from '@/lib/supabase'
-import { Package, ShoppingCart, Star, FolderOpen } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 async function getStats() {
@@ -40,10 +40,10 @@ export default async function AdminDashboard() {
   const [stats, recentOrders] = await Promise.all([getStats(), getRecentOrders()])
 
   const statCards = [
-    { label: 'Total Products', value: stats.products, icon: Package, href: '/admin/products', color: 'bg-blue-50 text-blue-600' },
-    { label: 'Total Orders', value: stats.orders, icon: ShoppingCart, href: '/admin/orders', color: 'bg-green-50 text-green-600', badge: stats.pendingOrders > 0 ? `${stats.pendingOrders} pending` : undefined },
-    { label: 'Featured Items', value: stats.featured, icon: Star, href: '/admin/featured', color: 'bg-yellow-50 text-yellow-600' },
-    { label: 'Categories', value: stats.categories, icon: FolderOpen, href: '/admin/categories', color: 'bg-purple-50 text-purple-600' },
+    { label: 'Total Products', value: stats.products, icon: '/icons/cube.webp', href: '/admin/products' },
+    { label: 'Total Orders', value: stats.orders, icon: '/icons/bag.webp', href: '/admin/orders', badge: stats.pendingOrders > 0 ? `${stats.pendingOrders} pending` : undefined },
+    { label: 'Featured Items', value: stats.featured, icon: '/icons/star.webp', href: '/admin/featured' },
+    { label: 'Categories', value: stats.categories, icon: '/icons/folder.webp', href: '/admin/categories' },
   ]
 
   return (
@@ -68,11 +68,9 @@ export default async function AdminDashboard() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {statCards.map(({ label, value, icon: Icon, href, color, badge }) => (
+        {statCards.map(({ label, value, icon, href, badge }) => (
           <Link key={label} href={href} className="admin-card hover:border-brand-gold transition-colors group">
-            <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${color}`}>
-              <Icon size={20} />
-            </div>
+            <Image src={icon} alt={label} width={48} height={48} className="mb-3" />
             <p className="font-display text-3xl text-brand-navy">{value}</p>
             <p className="text-brand-navy/50 text-xs font-body mt-1">{label}</p>
             {badge && (
