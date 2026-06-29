@@ -154,6 +154,7 @@ export default function Navbar() {
       {menuOpen && (
         <div className="md:hidden bg-white border-t border-brand-stone px-6 py-4 space-y-4">
           {[
+            { label: 'Home', href: '/' },
             { label: 'Women', href: '/shop?gender=women' },
             { label: 'Men', href: '/shop?gender=men' },
             { label: 'Featured', href: '/featured' },
