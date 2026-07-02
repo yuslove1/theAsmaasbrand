@@ -56,6 +56,7 @@ export default function AdminProducts() {
     setUploading(true)
     try {
       const urls: string[] = []
+      const errors: string[] = []
       for (const file of files) {
         const fd = new FormData()
         fd.append('file', file)
@@ -65,10 +66,19 @@ export default function AdminProducts() {
           body: fd,
         })
         const data = await res.json()
-        if (data.url) urls.push(data.url)
+        if (res.ok && data.url) {
+          urls.push(data.url)
+        } else {
+          errors.push(data.error || `Upload failed (${res.status})`)
+        }
       }
-      setForm((f) => ({ ...f, images: [...f.images, ...urls] }))
-      toast.success(`${urls.length} image(s) uploaded`)
+      if (urls.length) {
+        setForm((f) => ({ ...f, images: [...f.images, ...urls] }))
+        toast.success(`${urls.length} image(s) uploaded`)
+      }
+      if (errors.length) {
+        toast.error(errors[0])
+      }
     } catch {
       toast.error('Upload failed')
     } finally {

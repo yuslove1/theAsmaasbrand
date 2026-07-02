@@ -1,6 +1,5 @@
 -- ============================================================
 --  THE ASMAA'S BRAND — Supabase Database Schema
---  Run this in your Supabase SQL Editor (Dashboard → SQL Editor)
 -- ============================================================
 
 -- Enable UUID extension
