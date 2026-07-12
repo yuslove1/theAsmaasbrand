@@ -3,6 +3,7 @@ import { supabaseAdmin } from '@/lib/supabase'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+const EMAIL_FROM = process.env.RESEND_FROM_EMAIL || "The Asmaa's Brand <onboarding@resend.dev>"
 
 function generateOrderNumber(): string {
   const date = new Date()
@@ -66,8 +67,8 @@ export async function POST(req: NextRequest) {
       .join('')
 
     // ─── Email to Admin ────────────────────────────────────────────────
-    await resend.emails.send({
-      from: 'The Asmaa\'s Brand <orders@resend.dev>',
+    const adminEmail = await resend.emails.send({
+      from: EMAIL_FROM,
       to: process.env.ADMIN_EMAIL!,
       subject: `🛍️ New Order ${order_number} — ₦${total.toLocaleString()}`,
       html: `
@@ -121,8 +122,8 @@ export async function POST(req: NextRequest) {
     })
 
     // ─── Email to Customer ─────────────────────────────────────────────
-    await resend.emails.send({
-      from: 'The Asmaa\'s Brand <orders@resend.dev>',
+    const customerEmail = await resend.emails.send({
+      from: EMAIL_FROM,
       to: customer.email,
       subject: `Order Confirmed — ${order_number} · The Asmaa's Brand`,
       html: `
@@ -170,6 +171,9 @@ export async function POST(req: NextRequest) {
         </div>
       `,
     })
+
+    if (adminEmail.error) console.error('Admin order email failed:', adminEmail.error)
+    if (customerEmail.error) console.error('Customer order email failed:', customerEmail.error)
 
     return NextResponse.json({ order_number, id: order.id })
   } catch (err: any) {

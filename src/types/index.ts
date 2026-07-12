@@ -59,6 +59,7 @@ export interface Order {
   total: number
   payment_method: 'bank_transfer'
   payment_status: 'pending' | 'confirmed' | 'failed'
+  payment_reported_at?: string | null
   order_status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
   notes?: string
   created_at: string

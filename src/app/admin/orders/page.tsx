@@ -100,6 +100,11 @@ export default function AdminOrders() {
                   <span className={`px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-full ${PAYMENT_COLORS[order.payment_status]}`}>
                     Payment: {order.payment_status}
                   </span>
+                  {order.payment_reported_at && order.payment_status === 'pending' && (
+                    <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-full bg-blue-100 text-blue-700">
+                      Customer says paid
+                    </span>
+                  )}
                 </div>
                 <p className="font-body text-sm font-medium text-brand-navy mt-1">{order.customer_name}</p>
                 <p className="text-brand-navy/40 text-xs font-body">{order.customer_email}</p>

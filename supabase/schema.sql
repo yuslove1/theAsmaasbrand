@@ -67,6 +67,7 @@ CREATE TABLE orders (
   total             NUMERIC(10, 2) NOT NULL,
   payment_method    TEXT DEFAULT 'bank_transfer',
   payment_status    TEXT DEFAULT 'pending' CHECK (payment_status IN ('pending', 'confirmed', 'failed')),
+  payment_reported_at TIMESTAMPTZ,
   order_status      TEXT DEFAULT 'pending' CHECK (order_status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')),
   notes             TEXT,
   created_at        TIMESTAMPTZ DEFAULT NOW(),

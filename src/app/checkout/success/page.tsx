@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import MarkPaidButton from '@/components/checkout/MarkPaidButton'
 
 interface Props { searchParams: { order?: string } }
 
@@ -34,6 +35,12 @@ export default function SuccessPage({ searchParams }: Props) {
             08143378187
           </a>
         </p>
+
+        {searchParams.order && (
+          <div className="mb-6">
+            <MarkPaidButton orderNumber={searchParams.order} />
+          </div>
+        )}
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link href="/shop" className="btn-primary">Continue Shopping</Link>
