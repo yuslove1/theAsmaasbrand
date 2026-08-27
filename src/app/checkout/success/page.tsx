@@ -1,9 +1,23 @@
 import Link from 'next/link'
 import MarkPaidButton from '@/components/checkout/MarkPaidButton'
+import { supabaseAdmin } from '@/lib/supabase'
+import type { PaymentAccount } from '@/types'
 
 interface Props { searchParams: { order?: string } }
 
-export default function SuccessPage({ searchParams }: Props) {
+async function getActiveAccounts(): Promise<PaymentAccount[]> {
+  const db = supabaseAdmin()
+  const { data } = await db
+    .from('payment_accounts')
+    .select('*')
+    .eq('is_active', true)
+    .order('created_at')
+  return data || []
+}
+
+export default async function SuccessPage({ searchParams }: Props) {
+  const accounts = await getActiveAccounts()
+
   return (
     <div className="min-h-screen bg-brand-cream pt-28 flex items-center justify-center px-6">
       <div className="max-w-lg w-full text-center">
@@ -27,14 +41,30 @@ export default function SuccessPage({ searchParams }: Props) {
           <span className="font-semibold text-brand-wine">{searchParams.order}</span>{' '}
           has been received.
         </p>
-        <p className="text-brand-navy/50 font-body text-sm mb-8 leading-relaxed">
-          We have sent a confirmation email with your bank transfer details.
+        <p className="text-brand-navy/50 font-body text-sm mb-6 leading-relaxed">
           Your order will be processed once payment is confirmed.
           If you have questions, reach us on WhatsApp:{' '}
           <a href="https://wa.me/2348143378187" className="text-brand-wine underline">
             08143378187
           </a>
         </p>
+
+        {accounts.length > 0 && (
+          <div className="bg-white border border-brand-stone p-5 mb-6 text-left">
+            <p className="text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-3 text-center">
+              Send Payment To
+            </p>
+            <div className="space-y-4">
+              {accounts.map((a) => (
+                <div key={a.id} className="border-b border-brand-stone/50 last:border-0 pb-4 last:pb-0">
+                  <p className="font-body text-sm text-brand-navy/50">{a.bank_name}</p>
+                  <p className="font-body font-semibold text-brand-navy">{a.account_name}</p>
+                  <p className="font-mono text-lg text-brand-wine mt-0.5">{a.account_number}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {searchParams.order && (
           <div className="mb-6">

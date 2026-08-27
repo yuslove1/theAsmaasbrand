@@ -77,6 +77,16 @@ export interface FeaturedCollection {
   created_at: string
 }
 
+// ─── Payment Account ────────────────────────────────────────────────────────
+export interface PaymentAccount {
+  id: string
+  bank_name: string
+  account_name: string
+  account_number: string
+  is_active: boolean
+  created_at: string
+}
+
 // ─── Admin ──────────────────────────────────────────────────────────────────
 export interface AdminUser {
   id: string

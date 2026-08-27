@@ -7,6 +7,7 @@ import {
   Star,
   ShoppingCart,
   FolderOpen,
+  Landmark,
   LogOut,
   X,
 } from 'lucide-react'
@@ -17,6 +18,7 @@ const navItems = [
   { href: '/admin/categories', icon: FolderOpen, label: 'Categories' },
   { href: '/admin/featured', icon: Star, label: 'Featured Items' },
   { href: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
+  { href: '/admin/payment-accounts', icon: Landmark, label: 'Payment Accounts' },
 ]
 
 interface Props {

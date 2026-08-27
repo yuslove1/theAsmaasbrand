@@ -51,6 +51,24 @@ export async function POST(req: NextRequest) {
 
     if (error) throw error
 
+    // Active bank accounts to show the buyer
+    const { data: paymentAccounts } = await db
+      .from('payment_accounts')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at')
+
+    const accountsHtml = (paymentAccounts || [])
+      .map(
+        (a) => `
+        <div style="margin-bottom:12px;">
+          <p style="margin:0;font-size:12px;color:#888;">${a.bank_name}</p>
+          <p style="margin:0;font-size:14px;font-weight:bold;color:#0A1628;">${a.account_name}</p>
+          <p style="margin:0;font-size:16px;color:#6B1A2A;font-family:monospace;">${a.account_number}</p>
+        </div>`
+      )
+      .join('')
+
     // Build items HTML for email
     const itemsHtml = items
       .map(
@@ -144,14 +162,15 @@ export async function POST(req: NextRequest) {
 
             <h3 style="color:#6B1A2A;">Payment Instructions</h3>
             <div style="background:white;border:1px solid #E8E0D5;padding:16px;">
-              <p style="margin:0;font-size:14px;color:#444;">
-                Please make a bank transfer for <strong>₦${total.toLocaleString()}</strong> and send 
-                proof of payment to our WhatsApp: <strong>08143378187</strong> with your order number.
+              <p style="margin:0 0 12px;font-size:14px;color:#444;">
+                Please make a bank transfer for <strong>₦${total.toLocaleString()}</strong> to the account below,
+                then click &ldquo;I&apos;ve Made Payment&rdquo; on your order confirmation page (or message us on
+                WhatsApp: <strong>08143378187</strong>) with your order number.
               </p>
-              <br/>
+              ${accountsHtml || `
               <p style="margin:0;font-size:12px;color:#888;">
                 Bank details will be provided via WhatsApp or you can contact us at asmaurufai37@gmail.com
-              </p>
+              </p>`}
             </div>
 
             <h3 style="color:#6B1A2A;margin-top:20px;">Your Order</h3>

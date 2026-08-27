@@ -98,6 +98,17 @@ CREATE TABLE featured_collection_products (
 -- Seed one default active collection
 INSERT INTO featured_collections (title, active) VALUES ('This Week''s Picks', TRUE);
 
+-- ─── PAYMENT ACCOUNTS ────────────────────────────────────────
+-- Bank accounts shown to buyers for transfer, managed from admin
+CREATE TABLE payment_accounts (
+  id             UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  bank_name      TEXT NOT NULL,
+  account_name   TEXT NOT NULL,
+  account_number TEXT NOT NULL,
+  is_active      BOOLEAN DEFAULT TRUE,
+  created_at     TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ─── ROW LEVEL SECURITY ──────────────────────────────────────
 -- Enable RLS on all tables
 ALTER TABLE categories               ENABLE ROW LEVEL SECURITY;
@@ -105,6 +116,7 @@ ALTER TABLE products                 ENABLE ROW LEVEL SECURITY;
 ALTER TABLE orders                   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE featured_collections     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE featured_collection_products ENABLE ROW LEVEL SECURITY;
+ALTER TABLE payment_accounts         ENABLE ROW LEVEL SECURITY;
 
 -- PUBLIC read access (anon key) for products, categories, featured
 CREATE POLICY "Public can read categories"
@@ -118,6 +130,9 @@ CREATE POLICY "Public can read featured collections"
 
 CREATE POLICY "Public can read featured collection products"
   ON featured_collection_products FOR SELECT USING (TRUE);
+
+CREATE POLICY "Public can read active payment accounts"
+  ON payment_accounts FOR SELECT USING (is_active = TRUE);
 
 -- Public can INSERT orders (customers placing orders)
 CREATE POLICY "Public can place orders"
