@@ -212,6 +212,15 @@ export default function AdminOrders() {
                           ))}
                         </select>
                       </div>
+                      {order.payment_status !== 'confirmed' && (
+                        <button
+                          onClick={() => updateStatus(order.id, 'payment_status', 'confirmed')}
+                          disabled={loading}
+                          className="w-full py-2 text-xs uppercase tracking-wider rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-60 transition-colors"
+                        >
+                          Confirm Payment Received
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>

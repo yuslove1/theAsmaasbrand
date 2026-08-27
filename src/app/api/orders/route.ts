@@ -193,6 +193,13 @@ export async function PUT(req: NextRequest) {
   if (!id) return NextResponse.json({ error: 'Missing order id' }, { status: 400 })
 
   const db = supabaseAdmin()
+
+  const { data: existing } = await db
+    .from('orders')
+    .select('payment_status')
+    .eq('id', id)
+    .single()
+
   const { data, error } = await db
     .from('orders')
     .update({ ...rest, updated_at: new Date().toISOString() })
@@ -201,6 +208,40 @@ export async function PUT(req: NextRequest) {
     .single()
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+
+  // Notify the buyer only on the pending/failed → confirmed transition
+  if (rest.payment_status === 'confirmed' && existing?.payment_status !== 'confirmed') {
+    const { error: emailError } = await resend.emails.send({
+      from: EMAIL_FROM,
+      to: data.customer_email,
+      subject: `Payment Confirmed — ${data.order_number} · The Asmaa's Brand`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:auto;">
+          <div style="background:#0A1628;padding:24px;text-align:center;">
+            <h1 style="color:#C9A84C;margin:0;font-size:28px;">The Asmaa's Brand</h1>
+            <p style="color:#ffffff80;margin:4px 0 0;font-size:12px;letter-spacing:3px;">PAYMENT CONFIRMED</p>
+          </div>
+          <div style="padding:24px;background:#FAF7F2;border:1px solid #E8E0D5;">
+            <h2 style="color:#0A1628;">Assalamu Alaikum, ${data.customer_name}! ✅</h2>
+            <p style="color:#666;font-size:14px;">
+              Your payment for order <strong>${data.order_number}</strong> has been confirmed
+              by The Asmaa's Brand. JazakAllahu Khairan — we're preparing your order now.
+            </p>
+            <div style="background:#0A1628;color:white;padding:16px;text-align:center;margin:20px 0;">
+              <p style="margin:0;font-size:12px;letter-spacing:3px;color:#C9A84C;">ORDER NUMBER</p>
+              <p style="margin:4px 0 0;font-size:24px;font-weight:bold;">${data.order_number}</p>
+              <p style="margin:8px 0 0;font-size:13px;color:#ffffffaa;">₦${Number(data.total).toLocaleString()}</p>
+            </div>
+            <p style="color:#888;font-size:12px;margin-top:20px;text-align:center;">
+              Questions? WhatsApp: 08143378187 · Email: asmaurufai37@gmail.com
+            </p>
+          </div>
+        </div>
+      `,
+    })
+    if (emailError) console.error('Payment-confirmed email failed:', emailError)
+  }
+
   return NextResponse.json(data)
 }
 
