@@ -215,7 +215,7 @@ export async function PUT(req: NextRequest) {
 
   const { data: existing } = await db
     .from('orders')
-    .select('payment_status')
+    .select('payment_status, order_status')
     .eq('id', id)
     .single()
 
@@ -259,6 +259,82 @@ export async function PUT(req: NextRequest) {
       `,
     })
     if (emailError) console.error('Payment-confirmed email failed:', emailError)
+  }
+
+  // Notify the buyer only on the → shipped transition
+  if (rest.order_status === 'shipped' && existing?.order_status !== 'shipped') {
+    const { error: shippedEmailError } = await resend.emails.send({
+      from: EMAIL_FROM,
+      to: data.customer_email,
+      subject: `Your Order Is On The Way — ${data.order_number} · The Asmaa's Brand`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:auto;">
+          <div style="background:#0A1628;padding:24px;text-align:center;">
+            <h1 style="color:#C9A84C;margin:0;font-size:28px;">The Asmaa's Brand</h1>
+            <p style="color:#ffffff80;margin:4px 0 0;font-size:12px;letter-spacing:3px;">ORDER SHIPPED</p>
+          </div>
+          <div style="padding:24px;background:#FAF7F2;border:1px solid #E8E0D5;">
+            <h2 style="color:#0A1628;">Assalamu Alaikum, ${data.customer_name}! 📦</h2>
+            <p style="color:#666;font-size:14px;">
+              Your order <strong>${data.order_number}</strong> is on its way to you.
+            </p>
+            <div style="background:white;border:1px solid #E8E0D5;padding:16px;margin:20px 0;">
+              <p style="margin:0;font-size:12px;color:#888;letter-spacing:1px;text-transform:uppercase;">Delivery Address</p>
+              <p style="margin:4px 0 0;font-size:14px;color:#0A1628;">
+                ${data.delivery_address}<br/>
+                ${data.delivery_city}, ${data.delivery_state}
+              </p>
+            </div>
+            <p style="color:#888;font-size:12px;margin-top:20px;text-align:center;">
+              Questions? WhatsApp: 08143378187 · Email: asmaurufai37@gmail.com
+            </p>
+          </div>
+        </div>
+      `,
+    })
+    if (shippedEmailError) console.error('Order-shipped email failed:', shippedEmailError)
+  }
+
+  // Notify the buyer only on the → delivered transition
+  if (rest.order_status === 'delivered' && existing?.order_status !== 'delivered') {
+    const { error: deliveredEmailError } = await resend.emails.send({
+      from: EMAIL_FROM,
+      to: data.customer_email,
+      subject: `Delivered! Thank You, ${data.customer_name} 🤍 · The Asmaa's Brand`,
+      html: `
+        <div style="font-family:sans-serif;max-width:600px;margin:auto;">
+          <div style="background:#0A1628;padding:24px;text-align:center;">
+            <h1 style="color:#C9A84C;margin:0;font-size:28px;">The Asmaa's Brand</h1>
+            <p style="color:#ffffff80;margin:4px 0 0;font-size:12px;letter-spacing:3px;">ORDER DELIVERED</p>
+          </div>
+          <div style="padding:24px;background:#FAF7F2;border:1px solid #E8E0D5;">
+            <h2 style="color:#0A1628;">Assalamu Alaikum, ${data.customer_name}! 🤍</h2>
+            <p style="color:#444;font-size:14px;line-height:1.7;">
+              Your order <strong>${data.order_number}</strong> has been delivered — we hope it arrived safely
+              and that you fall in love with it the moment you open it.
+            </p>
+            <p style="color:#444;font-size:14px;line-height:1.7;">
+              Thank you for trusting The Asmaa's Brand with your order. Every purchase means the world to
+              our small business, and we truly appreciate you choosing us. JazakAllahu Khairan
+              — may Allah bless you abundantly. 🤲
+            </p>
+            <p style="color:#444;font-size:14px;line-height:1.7;">
+              If anything about your order isn't quite right, please reach out — we'd love to make it right.
+              And if you loved it, we'd be so grateful if you shared a picture with us or told a friend!
+            </p>
+            <div style="background:#0A1628;color:white;padding:16px;text-align:center;margin:20px 0;">
+              <p style="margin:0;font-size:13px;color:#C9A84C;font-style:italic;">
+                "...best of your choices"
+              </p>
+            </div>
+            <p style="color:#888;font-size:12px;margin-top:20px;text-align:center;">
+              With love, The Asmaa's Brand · WhatsApp: 08143378187 · Email: asmaurufai37@gmail.com
+            </p>
+          </div>
+        </div>
+      `,
+    })
+    if (deliveredEmailError) console.error('Order-delivered email failed:', deliveredEmailError)
   }
 
   return NextResponse.json(data)
