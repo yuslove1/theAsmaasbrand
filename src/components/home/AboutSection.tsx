@@ -44,29 +44,30 @@ export default function AboutSection() {
             </div>
           </div>
 
-          {/* Image grid */}
-          <div className="grid grid-cols-2 gap-3 h-96">
-            <div className="relative rounded-none overflow-hidden">
+          {/* Image grid — each tile's box ratio matches its photo's natural aspect,
+              so object-cover needs no real crop and no letterboxing is needed either */}
+          <div className="grid grid-cols-[5fr_4fr] gap-3">
+            <div className="relative overflow-hidden aspect-[914/1280]">
               <Image
-                src="https://images.unsplash.com/photo-1561442748-c50715dc32f6?w=600&q=80"
-                alt="Woman in abaya and hijab"
+                src="/images/theasmaasbrand_model_1.jpeg"
+                alt="The Asmaa's Brand founder at the store"
                 fill
                 className="object-cover"
               />
             </div>
-            <div className="grid grid-rows-2 gap-3">
-              <div className="relative overflow-hidden">
+            <div className="flex flex-col gap-3">
+              <div className="relative overflow-hidden aspect-[1280/914]">
                 <Image
-                  src="https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=600&q=80"
-                  alt="Islamic art"
+                  src="/images/theasmaasbrand_model_2.jpeg"
+                  alt="The Asmaa's Brand team at the store"
                   fill
                   className="object-cover"
                 />
               </div>
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden aspect-square">
                 <Image
-                  src="/images/men_cap&jalab.jpeg"
-                  alt="Jalabias and inner caps collection"
+                  src="/images/asmaasLogo.jpeg"
+                  alt="The Asmaa's Brand logo"
                   fill
                   className="object-cover"
                 />
