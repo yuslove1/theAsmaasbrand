@@ -7,7 +7,7 @@ import { ArrowRight } from 'lucide-react'
 
 const heroImages = [
   { src: '/images/asmaasLogo.jpeg', alt: "The Asmaa's Brand logo" },
-  { src: 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=1800&q=85', alt: 'Islamic calligraphy' },
+  { src: '/images/theasmaasbrand_model_2.jpeg', alt: "The Asmaa's Brand team at the store" },
   { src: '/images/men_jalab.jpeg', alt: 'Premium jalabias collection' },
 ]
 
