@@ -87,6 +87,14 @@ export interface PaymentAccount {
   created_at: string
 }
 
+// ─── Promo Banner ───────────────────────────────────────────────────────────
+export interface PromoBanner {
+  id: string
+  message: string
+  is_active: boolean
+  updated_at: string
+}
+
 // ─── Admin ──────────────────────────────────────────────────────────────────
 export interface AdminUser {
   id: string

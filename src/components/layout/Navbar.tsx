@@ -10,6 +10,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [promoMessage, setPromoMessage] = useState<string | null>(null)
   const itemCount = useCart((s) => s.itemCount)
   const pathname = usePathname()
   const router = useRouter()
@@ -20,6 +21,15 @@ export default function Navbar() {
     const handler = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', handler)
     return () => window.removeEventListener('scroll', handler)
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/promo')
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.is_active && data.message?.trim()) setPromoMessage(data.message)
+      })
+      .catch(() => {})
   }, [])
 
   if (isAdmin) return null
@@ -35,7 +45,7 @@ export default function Navbar() {
       {/* Top bar */}
       <div className="bg-brand-navy text-brand-gold text-center py-1.5 text-[10px] sm:text-xs tracking-widest uppercase font-body px-4">
         <span className="arabic-accent mr-2 text-base hidden sm:inline">بسم الله</span>
-        Free delivery within Lagos · WhatsApp: 08143378187
+        {promoMessage || 'Free delivery within Lagos · WhatsApp: 08143378187'}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

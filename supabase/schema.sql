@@ -109,6 +109,17 @@ CREATE TABLE payment_accounts (
   created_at     TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- ─── PROMO BANNER ────────────────────────────────────────────
+-- Single-row settings for the site-wide sale/promo announcement bar
+CREATE TABLE promo_banner (
+  id         TEXT PRIMARY KEY DEFAULT 'main',
+  message    TEXT NOT NULL DEFAULT '',
+  is_active  BOOLEAN DEFAULT FALSE,
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+INSERT INTO promo_banner (id, message, is_active) VALUES ('main', '', FALSE);
+
 -- ─── ROW LEVEL SECURITY ──────────────────────────────────────
 -- Enable RLS on all tables
 ALTER TABLE categories               ENABLE ROW LEVEL SECURITY;
@@ -117,6 +128,7 @@ ALTER TABLE orders                   ENABLE ROW LEVEL SECURITY;
 ALTER TABLE featured_collections     ENABLE ROW LEVEL SECURITY;
 ALTER TABLE featured_collection_products ENABLE ROW LEVEL SECURITY;
 ALTER TABLE payment_accounts         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE promo_banner             ENABLE ROW LEVEL SECURITY;
 
 -- PUBLIC read access (anon key) for products, categories, featured
 CREATE POLICY "Public can read categories"
@@ -133,6 +145,9 @@ CREATE POLICY "Public can read featured collection products"
 
 CREATE POLICY "Public can read active payment accounts"
   ON payment_accounts FOR SELECT USING (is_active = TRUE);
+
+CREATE POLICY "Public can read active promo banner"
+  ON promo_banner FOR SELECT USING (is_active = TRUE);
 
 -- Public can INSERT orders (customers placing orders)
 CREATE POLICY "Public can place orders"
