@@ -142,7 +142,7 @@ export default function ProductDetail({ product, related }: Props) {
             {/* Delivery note */}
             <div className="mt-6 p-4 border border-brand-stone bg-white">
               <p className="text-brand-navy/50 text-xs font-body leading-relaxed">
-                🚚 We deliver to all states in Nigeria via bank transfer payment.
+                We deliver to all states in Nigeria. only bank transfer payment is currently accepted. Please make payment to the account details provided at checkout.
                 Order confirmation will be sent to your email. WhatsApp: 08143378187
               </p>
             </div>
