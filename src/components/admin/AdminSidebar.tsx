@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   LayoutDashboard,
   Package,
@@ -8,6 +8,7 @@ import {
   ShoppingCart,
   FolderOpen,
   Landmark,
+  Home,
   LogOut,
   X,
 } from 'lucide-react'
@@ -28,6 +29,13 @@ interface Props {
 
 export default function AdminSidebar({ open, onClose }: Props) {
   const pathname = usePathname()
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    await fetch('/api/admin/logout', { method: 'POST' })
+    router.push('/admin/login')
+    router.refresh()
+  }
 
   return (
     <>
@@ -78,14 +86,21 @@ export default function AdminSidebar({ open, onClose }: Props) {
         </nav>
 
         {/* Bottom */}
-        <div className="p-4 border-t border-white/10">
+        <div className="p-4 border-t border-white/10 space-y-1">
           <Link
             href="/"
             className="flex items-center gap-3 px-4 py-3 text-white/40 hover:text-white text-sm font-body transition-colors"
           >
-            <LogOut size={18} />
+            <Home size={18} />
             Back to Site
           </Link>
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-3 text-white/40 hover:text-white text-sm font-body transition-colors"
+          >
+            <LogOut size={18} />
+            Log Out
+          </button>
         </div>
       </aside>
     </>
