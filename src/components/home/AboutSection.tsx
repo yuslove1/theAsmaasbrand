@@ -1,6 +1,7 @@
 import { CONTACT_EMAIL, CONTACT_WHATSAPP, CONTACT_WHATSAPP_LINK } from '@/lib/contact'
 import Image from 'next/image'
 import { MapPin, Mail, Phone, MessageCircle } from 'lucide-react'
+import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
 
 export default function AboutSection() {
   return (
@@ -16,7 +17,7 @@ export default function AboutSection() {
         </div>
 
         <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
-          <div>
+          <Reveal y={36}>
             <p className="arabic-accent text-2xl mb-2 opacity-70" style={{ fontFamily: 'var(--font-amiri)' }}>
               من نحن
             </p>
@@ -43,11 +44,11 @@ export default function AboutSection() {
                 ...Shop The Quality!
               </p>
             </div>
-          </div>
+          </Reveal>
 
           {/* Image grid — each tile's box ratio matches its photo's natural aspect,
               so object-cover needs no real crop and no letterboxing is needed either */}
-          <div className="grid grid-cols-[5fr_4fr] gap-3">
+          <Reveal delay={0.15} y={36} className="grid grid-cols-[5fr_4fr] gap-3">
             <div className="relative overflow-hidden aspect-[914/1280]">
               <Image
                 src="/images/theasmaasbrand_model_1.jpeg"
@@ -74,22 +75,22 @@ export default function AboutSection() {
                 />
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Contact */}
       <section id="contact" className="py-20 bg-brand-cream">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <p className="arabic-accent text-2xl mb-2" style={{ fontFamily: 'var(--font-amiri)' }}>
               تواصل معنا
             </p>
             <h2 className="section-heading">Get In Touch</h2>
             <div className="gold-divider" />
-          </div>
+          </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
               {
                 icon: <MapPin size={28} className="text-brand-gold" />,
@@ -115,8 +116,8 @@ export default function AboutSection() {
                 href: `mailto:${CONTACT_EMAIL}`,
               },
             ].map(({ icon, title, lines, href }) => (
-              <div key={title} className="bg-white p-6 border border-brand-stone text-center group hover:border-brand-gold transition-colors duration-300">
-                <div className="flex justify-center mb-3">{icon}</div>
+              <StaggerItem key={title} className="bg-white p-6 border border-brand-stone text-center group hover:border-brand-gold hover:-translate-y-1 hover:shadow-lg transition-all duration-300">
+                <div className="flex justify-center mb-3 transition-transform duration-300 group-hover:scale-110">{icon}</div>
                 <h4 className="font-display text-lg text-brand-navy mb-2">{title}</h4>
                 {lines.map((line) =>
                   href ? (
@@ -131,9 +132,9 @@ export default function AboutSection() {
                     <p key={line} className="text-brand-navy/60 text-sm font-body">{line}</p>
                   )
                 )}
-              </div>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
 
           {/* Social links */}
           <div className="text-center mt-10">

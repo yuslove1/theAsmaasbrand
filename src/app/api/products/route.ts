@@ -32,6 +32,7 @@ export async function POST(req: NextRequest) {
   }
 
   const body = await req.json()
+  if (typeof body.name === 'string') body.name = body.name.trim()
   const db = supabaseAdmin()
 
   const slug = slugify(body.name) + '-' + Date.now()
@@ -52,6 +53,7 @@ export async function PUT(req: NextRequest) {
   }
 
   const body = await req.json()
+  if (typeof body.name === 'string') body.name = body.name.trim()
   const { id, ...rest } = body
   const db = supabaseAdmin()
 

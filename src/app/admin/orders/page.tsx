@@ -1,6 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { ChevronDown, ChevronUp, Phone, Mail, MapPin, FileText } from 'lucide-react'
+import { ChevronDown, ChevronUp, Phone, Mail, MapPin, FileText, Trash2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Order } from '@/types'
 
@@ -26,6 +26,7 @@ export default function AdminOrders() {
   const [expanded, setExpanded] = useState<string | null>(null)
   const [filter, setFilter] = useState('all')
   const [loading, setLoading] = useState(false)
+  const [confirmDelete, setConfirmDelete] = useState<string | null>(null)
 
   const load = async () => {
     const data = await fetch('/api/orders').then((r) => r.json())
@@ -47,6 +48,22 @@ export default function AdminOrders() {
       load()
     } catch {
       toast.error('Update failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const deleteOrder = async (id: string) => {
+    setLoading(true)
+    try {
+      const res = await fetch(`/api/orders?id=${encodeURIComponent(id)}`, { method: 'DELETE' })
+      if (!res.ok) throw new Error()
+      toast.success('Order deleted')
+      setConfirmDelete(null)
+      setExpanded(null)
+      load()
+    } catch {
+      toast.error('Could not delete order')
     } finally {
       setLoading(false)
     }
@@ -231,6 +248,37 @@ export default function AdminOrders() {
                           className="w-full py-2 text-xs uppercase tracking-wider rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-60 transition-colors"
                         >
                           Confirm Payment Received
+                        </button>
+                      )}
+                      {confirmDelete === order.id ? (
+                        <div className="border border-red-300 bg-red-50 p-2 space-y-2">
+                          <p className="text-xs font-body text-red-700">
+                            Delete order {order.order_number} permanently? This can&apos;t be undone.
+                          </p>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => deleteOrder(order.id)}
+                              disabled={loading}
+                              className="flex-1 py-1.5 text-xs uppercase tracking-wider rounded bg-red-600 text-white hover:bg-red-700 disabled:opacity-60"
+                            >
+                              Yes, delete
+                            </button>
+                            <button
+                              onClick={() => setConfirmDelete(null)}
+                              disabled={loading}
+                              className="flex-1 py-1.5 text-xs uppercase tracking-wider rounded border border-brand-stone text-brand-navy hover:bg-white"
+                            >
+                              Keep
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => setConfirmDelete(order.id)}
+                          disabled={loading}
+                          className="w-full flex items-center justify-center gap-2 py-2 text-xs uppercase tracking-wider rounded border border-red-300 text-red-600 hover:bg-red-50 disabled:opacity-60 transition-colors"
+                        >
+                          <Trash2 size={14} /> Delete Order
                         </button>
                       )}
                     </div>

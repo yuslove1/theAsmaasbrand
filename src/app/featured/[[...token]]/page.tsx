@@ -3,27 +3,38 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Product } from '@/types'
 import ShareButton from '@/components/ui/ShareButton'
+import { Stagger, StaggerItem } from '@/components/ui/Motion'
 
 interface Props { params: { token?: string[] } }
 
+// The admin "Featured Items" page marks products with is_featured, so that flag is the
+// source of truth for what's featured. The share token only supplies the collection's title.
+// (Previously a token link read the unused featured_collection_products table and the
+// shared "This Week's Picks" link always showed "No featured items".)
 async function getCollection(token?: string) {
-  if (token) {
-    const { data } = await supabase
-      .from('featured_collections')
-      .select('*, products:featured_collection_products(product:products(*))')
-      .eq('share_token', token)
-      .eq('active', true)
-      .single()
-    return data
+  const [{ data: products }, collection] = await Promise.all([
+    supabase
+      .from('products')
+      .select('*')
+      .eq('is_featured', true)
+      .eq('is_available', true)
+      .order('updated_at', { ascending: false })
+      .limit(12),
+    token
+      ? supabase
+          .from('featured_collections')
+          .select('title, subtitle')
+          .eq('share_token', token)
+          .eq('active', true)
+          .maybeSingle()
+          .then((r) => r.data)
+      : Promise.resolve(null),
+  ])
+  return {
+    title: collection?.title || "This Week's Picks",
+    subtitle: collection?.subtitle,
+    products: products || [],
   }
-  // Default: get featured products directly
-  const { data } = await supabase
-    .from('products')
-    .select('*')
-    .eq('is_featured', true)
-    .eq('is_available', true)
-    .limit(8)
-  return { title: "This Week's Picks", products: data || [] }
 }
 
 export default async function FeaturedPage({ params }: Props) {
@@ -78,12 +89,12 @@ export default async function FeaturedPage({ params }: Props) {
             <Link href="/shop" className="btn-primary mt-6 inline-block">Browse All Products</Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+          <Stagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {products.map((product) => (
+              <StaggerItem key={product.id}>
               <Link
-                key={product.id}
                 href={`/shop/${product.slug}`}
-                className="product-card group"
+                className="product-card group block h-full"
               >
                 <div className="relative aspect-[3/4] bg-brand-stone overflow-hidden">
                   <Image
@@ -105,8 +116,9 @@ export default async function FeaturedPage({ params }: Props) {
                   </div>
                 </div>
               </Link>
+              </StaggerItem>
             ))}
-          </div>
+          </Stagger>
         )}
 
         {/* Sticky bottom CTA for social traffic */}

@@ -31,7 +31,7 @@ export default function AdminPromo() {
   const fileRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    fetch('/api/promo')
+    fetch('/api/promo?admin=1')
       .then((r) => r.json())
       .then((data) => {
         setMessage(data.message || '')

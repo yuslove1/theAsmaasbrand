@@ -84,8 +84,8 @@ export default function AdminProducts() {
   }
 
   const handleSave = async () => {
-    if (!form.name || !form.price || form.category.length === 0) {
-      toast.error('Please fill in all required fields')
+    if (!form.name.trim() || !form.price || form.category.length === 0 || !form.subcategory) {
+      toast.error('Please fill in name, price, category and subcategory')
       return
     }
     setSaving(true)
@@ -196,7 +196,7 @@ export default function AdminProducts() {
 
                 <div>
                   <label className="block text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-1">
-                    Subcategory
+                    Subcategory *
                   </label>
                   <select
                     value={form.subcategory}

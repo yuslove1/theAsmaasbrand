@@ -29,17 +29,20 @@
   .btn-primary {
     @apply bg-brand-wine text-white px-6 py-3 font-body font-medium tracking-wide
            hover:bg-brand-rose transition-all duration-300 rounded-none
+           active:scale-[0.97] hover:shadow-md
            border border-brand-wine hover:border-brand-rose;
   }
 
   .btn-gold {
     @apply bg-brand-gold text-brand-navy px-6 py-3 font-body font-semibold tracking-widest
-           text-sm uppercase hover:bg-brand-gold2 transition-all duration-300;
+           text-sm uppercase hover:bg-brand-gold2 transition-all duration-300
+           active:scale-[0.97] hover:shadow-md;
   }
 
   .btn-outline {
     @apply border border-brand-navy text-brand-navy px-6 py-3 font-body font-medium
-           hover:bg-brand-navy hover:text-white transition-all duration-300;
+           hover:bg-brand-navy hover:text-white transition-all duration-300
+           active:scale-[0.97];
   }
 
   .section-heading {
@@ -95,4 +98,14 @@
 
 @keyframes shimmer {
   to { background-position: 200% center; }
+}
+
+/* Respect the OS "reduce motion" setting for CSS animations too */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

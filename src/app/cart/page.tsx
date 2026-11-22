@@ -3,6 +3,7 @@ import { useCart } from '@/hooks/useCart'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, updateNote, total, clearCart } = useCart()
@@ -30,8 +31,17 @@ export default function CartPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
           {/* Items */}
           <div className="lg:col-span-2 space-y-4">
+            <AnimatePresence initial={false}>
             {items.map(({ product, quantity, note }) => (
-              <div key={product.id} className="bg-white border border-brand-stone p-3 sm:p-4 flex gap-3 sm:gap-4">
+              <motion.div
+                key={product.id}
+                layout
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, x: -40, height: 0, marginTop: 0, paddingTop: 0, paddingBottom: 0 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                className="bg-white border border-brand-stone p-3 sm:p-4 flex gap-3 sm:gap-4 overflow-hidden"
+              >
                 <div className="relative w-20 h-28 sm:w-24 sm:h-32 flex-shrink-0 bg-brand-stone overflow-hidden">
                   <Image
                     src={product.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=200'}
@@ -89,8 +99,9 @@ export default function CartPage() {
                     </span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
+            </AnimatePresence>
 
             <button
               onClick={clearCart}

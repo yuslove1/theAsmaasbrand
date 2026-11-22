@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
+import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
 
 const categories = [
   {
@@ -30,18 +31,18 @@ export default function CategoriesSection() {
     <section className="py-20 bg-brand-cream">
       <div className="max-w-7xl mx-auto px-6">
         {/* Heading */}
-        <div className="text-center mb-12">
+        <Reveal className="text-center mb-12">
           <p className="arabic-accent text-2xl mb-2" style={{ fontFamily: 'var(--font-amiri)' }}>
             تسوق الآن
           </p>
           <h2 className="section-heading">Shop by Collection</h2>
           <div className="gold-divider" />
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-6" gap={0.12}>
           {categories.map((cat) => (
+            <StaggerItem key={cat.title}>
             <Link
-              key={cat.title}
               href={cat.href}
               className="group relative overflow-hidden aspect-[3/4] block"
             >
@@ -70,8 +71,9 @@ export default function CategoriesSection() {
                 </div>
               </div>
             </Link>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   )

@@ -3,7 +3,7 @@ import { isAdminRequest } from '@/lib/adminAuth'
 import { supabaseAdmin } from '@/lib/supabase'
 import { escapeHtml } from '@/lib/html'
 import { CONTACT_EMAIL, CONTACT_WHATSAPP } from '@/lib/contact'
-import { receiptUrl } from '@/lib/cloudinaryServer'
+import { deleteReceipt, receiptUrl } from '@/lib/cloudinaryServer'
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -474,4 +474,29 @@ export async function GET(req: NextRequest) {
       payment_receipt_url: o.payment_receipt ? receiptUrl(o.payment_receipt) : null,
     }))
   )
+}
+
+// Permanently delete an order (e.g. test or spam orders). Also removes its private receipt.
+export async function DELETE(req: NextRequest) {
+  if (!(await isAdminRequest(req))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+  const id = req.nextUrl.searchParams.get('id')
+  if (!id) return NextResponse.json({ error: 'Missing order id' }, { status: 400 })
+
+  const db = supabaseAdmin()
+  const { data: order, error } = await db
+    .from('orders')
+    .delete()
+    .eq('id', id)
+    .select('id, payment_receipt')
+    .maybeSingle()
+
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+  if (!order) return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+
+  if (order.payment_receipt) {
+    await deleteReceipt(order.payment_receipt).catch((err) => console.error('Receipt cleanup failed:', err))
+  }
+  return NextResponse.json({ success: true })
 }

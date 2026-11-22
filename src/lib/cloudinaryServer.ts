@@ -46,3 +46,11 @@ export function receiptUrl(receipt: PaymentReceipt): string {
     ...(receipt.resource_type === 'image' ? { format: receipt.format } : {}),
   })
 }
+
+export async function deleteReceipt(receipt: PaymentReceipt): Promise<void> {
+  await cloudinary.uploader.destroy(receipt.public_id, {
+    resource_type: receipt.resource_type,
+    type: 'authenticated',
+    invalidate: true,
+  })
+}

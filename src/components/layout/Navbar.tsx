@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { ShoppingBag, Menu, X, Search } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { getPublicPromo } from '@/lib/promoClient'
+import { AnimatePresence, motion } from 'framer-motion'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -105,9 +106,15 @@ export default function Navbar() {
             }`}>
               <ShoppingBag size={22} />
               {itemCount() > 0 && (
-                <span className="absolute -top-2 -right-2 bg-brand-wine text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                <motion.span
+                  key={itemCount()}
+                  initial={{ scale: 0.4 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: 'spring', stiffness: 500, damping: 15 }}
+                  className="absolute -top-2 -right-2 bg-brand-wine text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center"
+                >
                   {itemCount()}
-                </span>
+                </motion.span>
               )}
             </Link>
 
@@ -125,8 +132,17 @@ export default function Navbar() {
       </div>
 
       {/* Search bar */}
+      <AnimatePresence>
       {searchOpen && (
-        <div className="bg-white border-t border-brand-stone px-4 sm:px-6 py-3">
+        <motion.div
+          key="search"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+          className="bg-white border-t border-brand-stone px-4 sm:px-6 overflow-hidden"
+        >
+          <div className="py-3">
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -157,12 +173,23 @@ export default function Navbar() {
               <X size={20} />
             </button>
           </form>
-        </div>
+          </div>
+        </motion.div>
       )}
+      </AnimatePresence>
 
       {/* Mobile menu */}
+      <AnimatePresence>
       {menuOpen && (
-        <div className="md:hidden bg-white border-t border-brand-stone px-6 py-4 space-y-4">
+        <motion.div
+          key="menu"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: 'auto', opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="md:hidden bg-white border-t border-brand-stone overflow-hidden"
+        >
+          <div className="px-6 py-4 space-y-4">
           {[
             { label: 'Home', href: '/' },
             { label: 'Women', href: '/shop?gender=women' },
@@ -170,18 +197,26 @@ export default function Navbar() {
             { label: 'Featured', href: '/featured' },
             { label: 'About', href: '/#about' },
             { label: 'Contact', href: '/#contact' },
-          ].map(({ label, href }) => (
-            <Link
+          ].map(({ label, href }, i) => (
+            <motion.div
               key={label}
+              initial={{ opacity: 0, x: -12 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.05 * i, duration: 0.3 }}
+            >
+            <Link
               href={href}
               className="block text-sm font-body font-medium tracking-widest uppercase text-brand-navy/80 hover:text-brand-wine transition-colors py-1"
               onClick={() => setMenuOpen(false)}
             >
               {label}
             </Link>
+            </motion.div>
           ))}
-        </div>
+          </div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </header>
   )
 }

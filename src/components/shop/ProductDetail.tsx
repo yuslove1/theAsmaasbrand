@@ -7,6 +7,8 @@ import { ShoppingBag, ArrowLeft, Share2 } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import toast from 'react-hot-toast'
 import type { Product } from '@/types'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
 
 interface Props { product: Product; related: Product[] }
 
@@ -39,30 +41,49 @@ export default function ProductDetail({ product, related }: Props) {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Images */}
           <div>
-            <div className="relative aspect-[3/4] bg-brand-stone overflow-hidden">
-              <Image
-                src={images[activeImage]}
-                alt={product.name}
-                fill
-                className="object-cover"
-              />
+            <motion.div
+              className="relative aspect-[3/4] bg-brand-stone overflow-hidden"
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <AnimatePresence initial={false} mode="popLayout">
+                <motion.div
+                  key={activeImage}
+                  className="absolute inset-0"
+                  initial={{ opacity: 0, scale: 1.04 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Image
+                    src={images[activeImage]}
+                    alt={product.name}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
               {product.is_featured && (
                 <span className="absolute top-4 left-4 bg-brand-wine text-white text-xs tracking-widest uppercase px-3 py-1 font-body">
                   Featured
                 </span>
               )}
-            </div>
+            </motion.div>
             {images.length > 1 && (
-              <div className="flex gap-3 mt-3">
+              <div className="flex gap-3 mt-3 overflow-x-auto pb-1">
                 {images.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveImage(i)}
-                    className={`relative w-20 h-20 overflow-hidden border-2 transition-colors ${
-                      activeImage === i ? 'border-brand-wine' : 'border-transparent'
+                    aria-label={`Show image ${i + 1}`}
+                    className={`relative w-16 h-16 sm:w-20 sm:h-20 flex-shrink-0 overflow-hidden border-2 transition-all duration-300 hover:opacity-100 ${
+                      activeImage === i ? 'border-brand-wine opacity-100' : 'border-transparent opacity-70'
                     }`}
                   >
-                    <Image src={img} alt="" fill className="object-cover" />
+                    <Image src={img} alt="" fill sizes="80px" className="object-cover" />
                   </button>
                 ))}
               </div>
@@ -70,16 +91,20 @@ export default function ProductDetail({ product, related }: Props) {
           </div>
 
           {/* Info */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+          >
             <p className="text-brand-navy/40 text-xs tracking-widest uppercase font-body mb-2">
-              {product.category.join(', ')} · {product.subcategory}
+              {[product.category.join(', '), product.subcategory?.replace(/-/g, ' ')].filter(Boolean).join(' · ')}
             </p>
-            <h1 className="font-display text-4xl text-brand-navy mb-3">{product.name}</h1>
+            <h1 className="font-display text-3xl sm:text-4xl text-brand-navy mb-3">{product.name}</h1>
             <p className="font-body font-bold text-2xl text-brand-wine mb-4">
               ₦{product.price.toLocaleString()}
             </p>
             <div className="w-12 h-0.5 bg-brand-gold mb-5" />
-            <p className="text-brand-navy/60 font-body text-sm leading-relaxed mb-8">
+            <p className="text-brand-navy/60 font-body text-sm leading-relaxed mb-8 whitespace-pre-line">
               {product.description}
             </p>
 
@@ -143,21 +168,24 @@ export default function ProductDetail({ product, related }: Props) {
             {/* Delivery note */}
             <div className="mt-6 p-4 border border-brand-stone bg-white">
               <p className="text-brand-navy/50 text-xs font-body leading-relaxed">
-                We deliver to all states in Nigeria. only bank transfer payment is currently accepted. Please make payment to the account details provided at checkout.
+                We deliver to all states in Nigeria. Only bank transfer payment is currently accepted. Please make payment to the account details provided at checkout.
                 Order confirmation will be sent to your email. WhatsApp: {CONTACT_WHATSAPP}
               </p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Related products */}
         {related.length > 0 && (
           <div className="mt-20">
-            <h2 className="font-display text-3xl text-brand-navy mb-2">You May Also Like</h2>
-            <div className="w-10 h-0.5 bg-brand-gold mb-8" />
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Reveal>
+              <h2 className="font-display text-3xl text-brand-navy mb-2">You May Also Like</h2>
+              <div className="w-10 h-0.5 bg-brand-gold mb-8" />
+            </Reveal>
+            <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {related.map((p) => (
-                <Link key={p.id} href={`/shop/${p.slug}`} className="product-card group block">
+                <StaggerItem key={p.id}>
+                <Link href={`/shop/${p.slug}`} className="product-card group block">
                   <div className="relative aspect-[3/4] bg-brand-stone overflow-hidden">
                     <Image
                       src={p.images[0] || 'https://images.unsplash.com/photo-1609599006353-e629aaabfeae?w=400'}
@@ -173,8 +201,9 @@ export default function ProductDetail({ product, related }: Props) {
                     </p>
                   </div>
                 </Link>
+                </StaggerItem>
               ))}
-            </div>
+            </Stagger>
           </div>
         )}
       </div>

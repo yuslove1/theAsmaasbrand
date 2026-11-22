@@ -2,6 +2,7 @@
 import { CONTACT_EMAIL, CONTACT_WHATSAPP, CONTACT_WHATSAPP_LINK } from '@/lib/contact'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Reveal } from '@/components/ui/Motion'
 
 export default function Footer() {
   const pathname = usePathname()
@@ -20,7 +21,7 @@ export default function Footer() {
         </p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
+      <Reveal className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10">
         {/* Brand */}
         <div className="md:col-span-2">
           <h3 className="font-display text-2xl text-brand-gold mb-2">The Asmaa&apos;s Brand</h3>
@@ -85,7 +86,7 @@ export default function Footer() {
             </li>
           </ul>
         </div>
-      </div>
+      </Reveal>
 
       <div className="border-t border-white/10 text-center py-4 text-white/30 text-xs font-body tracking-wider">
         © {new Date().getFullYear()} The Asmaa&apos;s Brand · All rights reserved · Built with care

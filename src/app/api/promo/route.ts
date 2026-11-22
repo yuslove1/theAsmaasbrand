@@ -5,12 +5,17 @@ import { supabaseAdmin } from '@/lib/supabase'
 export const dynamic = 'force-dynamic'
 
 export async function GET(req: NextRequest) {
-  const isAdmin = await isAdminRequest(req)
+  // The site always gets the public shape (even for a logged-in admin browsing the shop,
+  // so she sees the popup exactly as customers do). The admin page asks for ?admin=1.
+  const wantsAdmin = req.nextUrl.searchParams.get('admin') === '1'
+  if (wantsAdmin && !(await isAdminRequest(req))) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
   const db = supabaseAdmin()
   const { data, error } = await db.from('promo_banner').select('*').eq('id', 'main').single()
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })
 
-  if (isAdmin) return NextResponse.json(data)
+  if (wantsAdmin) return NextResponse.json(data)
 
   // Public view: only what is switched on
   const bannerOn = !!data.is_active && !!data.message?.trim()

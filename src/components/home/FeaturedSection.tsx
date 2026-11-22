@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Share2, ArrowRight, ExternalLink } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Product } from '@/types'
+import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
 
 interface Props {
   products: Product[]
@@ -79,7 +80,7 @@ export default function FeaturedSection({ products, shareToken }: Props) {
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-6">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <Reveal className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
             <p className="arabic-accent text-2xl mb-2" style={{ fontFamily: 'var(--font-amiri)' }}>
               عروض هذا الأسبوع
@@ -106,21 +107,23 @@ export default function FeaturedSection({ products, shareToken }: Props) {
               View All <ExternalLink size={14} />
             </Link>
           </div>
-        </div>
+        </Reveal>
 
         {/* Products grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <Stagger className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {products.slice(0, 4).map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <StaggerItem key={p.id}>
+              <ProductCard product={p} />
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
 
         {/* CTA */}
-        <div className="text-center mt-12">
+        <Reveal className="text-center mt-12">
           <Link href="/shop" className="btn-primary inline-flex items-center gap-2">
             Browse Full Collection <ArrowRight size={16} />
           </Link>
-        </div>
+        </Reveal>
       </div>
     </section>
   )

@@ -7,6 +7,8 @@ import { ShoppingBag, Search, Filter } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import toast from 'react-hot-toast'
 import type { Product, Category } from '@/types'
+import { AnimatePresence, motion } from 'framer-motion'
+import { Reveal } from '@/components/ui/Motion'
 
 interface Props {
   products: Product[]
@@ -157,7 +159,16 @@ export default function ShopClient({ products, categories, searchParams }: Props
         </div>
 
         {/* Category filters */}
+        <AnimatePresence initial={false}>
         {showFilters && (
+          <motion.div
+            key="filters"
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="overflow-hidden"
+          >
           <div className="mb-8 p-4 sm:p-5 border border-brand-stone bg-white grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
               <p className="text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-3">
@@ -200,7 +211,9 @@ export default function ShopClient({ products, categories, searchParams }: Props
               </div>
             </div>
           </div>
+          </motion.div>
         )}
+        </AnimatePresence>
 
         {/* Product grid */}
         {products.length === 0 ? (
@@ -215,8 +228,10 @@ export default function ShopClient({ products, categories, searchParams }: Props
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-            {products.map((p) => (
-              <ProductCard key={p.id} product={p} />
+            {products.map((p, i) => (
+              <Reveal key={p.id} delay={(i % 4) * 0.06} y={24}>
+                <ProductCard product={p} />
+              </Reveal>
             ))}
           </div>
         )}

@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import MarkPaidButton from '@/components/checkout/MarkPaidButton'
+import SuccessCheck from '@/components/checkout/SuccessCheck'
 import { supabaseAdmin } from '@/lib/supabase'
 import { CONTACT_WHATSAPP, CONTACT_WHATSAPP_LINK } from '@/lib/contact'
 import type { PaymentAccount } from '@/types'
@@ -50,11 +51,7 @@ export default async function SuccessPage({ searchParams }: Props) {
           الحمد لله
         </p>
 
-        <div className="w-20 h-20 rounded-full bg-green-50 border-2 border-green-400 flex items-center justify-center mx-auto mb-6">
-          <svg className="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-          </svg>
-        </div>
+        <SuccessCheck />
 
         <h1 className="font-display text-4xl text-brand-navy mb-3">Order Placed!</h1>
         <p className="text-brand-navy/50 font-body mb-2">
