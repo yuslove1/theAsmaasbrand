@@ -5,6 +5,7 @@ export interface Product {
   slug: string
   description: string
   price: number
+  compare_at_price?: number | null  // optional "was" price, shown struck through when higher than price
   category: ('women' | 'men')[]
   subcategory: string
   images: string[]          // Cloudinary URLs

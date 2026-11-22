@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { Plus, Pencil, Trash2, Upload, X, Star } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Product, Category } from '@/types'
+import Price from '@/components/ui/Price'
 
 function headers() {
   return { 'Content-Type': 'application/json' }
@@ -13,6 +14,7 @@ interface ProductFormData {
   name: string
   description: string
   price: string
+  compare_at_price: string
   category: ('women' | 'men')[]
   subcategory: string
   is_featured: boolean
@@ -21,7 +23,7 @@ interface ProductFormData {
 }
 
 const emptyForm: ProductFormData = {
-  name: '', description: '', price: '', category: ['women'],
+  name: '', description: '', price: '', compare_at_price: '', category: ['women'],
   subcategory: '', is_featured: false, is_available: true, images: [],
 }
 
@@ -88,9 +90,15 @@ export default function AdminProducts() {
       toast.error('Please fill in name, price, category and subcategory')
       return
     }
+    const price = parseFloat(form.price)
+    const oldPrice = form.compare_at_price.trim() ? parseFloat(form.compare_at_price) : null
+    if (oldPrice !== null && !(oldPrice > price)) {
+      toast.error('Old price must be higher than the current price (or leave it empty)')
+      return
+    }
     setSaving(true)
     try {
-      const payload = { ...form, price: parseFloat(form.price) }
+      const payload = { ...form, price, compare_at_price: oldPrice }
       const method = editId ? 'PUT' : 'POST'
       const body = editId ? { ...payload, id: editId } : payload
       const res = await fetch('/api/products', {
@@ -98,14 +106,17 @@ export default function AdminProducts() {
         headers: headers(),
         body: JSON.stringify(body),
       })
-      if (!res.ok) throw new Error('Save failed')
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data.error || 'Failed to save product')
+      }
       toast.success(editId ? 'Product updated!' : 'Product added!')
       setShowForm(false)
       setForm(emptyForm)
       setEditId(null)
       load()
-    } catch {
-      toast.error('Failed to save product')
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to save product')
     } finally {
       setSaving(false)
     }
@@ -121,6 +132,7 @@ export default function AdminProducts() {
   const handleEdit = (p: Product) => {
     setForm({
       name: p.name, description: p.description, price: String(p.price),
+      compare_at_price: p.compare_at_price != null ? String(p.compare_at_price) : '',
       category: p.category, subcategory: p.subcategory,
       is_featured: p.is_featured, is_available: p.is_available, images: p.images,
     })
@@ -223,6 +235,23 @@ export default function AdminProducts() {
                   />
                 </div>
 
+                <div>
+                  <label className="block text-xs font-body font-semibold tracking-widest uppercase text-brand-navy mb-1">
+                    Old Price (₦) — optional
+                  </label>
+                  <input
+                    type="number"
+                    value={form.compare_at_price}
+                    onChange={(e) => setForm({ ...form, compare_at_price: e.target.value })}
+                    className="input-field"
+                    placeholder="e.g. 7000"
+                  />
+                  <p className="text-brand-navy/40 text-xs font-body mt-1">
+                    For items on sale: the price it used to be. It shows crossed out next to the price.
+                    Leave empty if the item isn&apos;t discounted.
+                  </p>
+                </div>
+
                 <div className="flex items-end gap-4 pb-1">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -323,7 +352,7 @@ export default function AdminProducts() {
                   </div>
                 </td>
                 <td className="py-3 px-2 capitalize hidden sm:table-cell">{p.category.join(', ')}</td>
-                <td className="py-3 px-2 font-semibold text-brand-wine whitespace-nowrap">₦{p.price.toLocaleString()}</td>
+                <td className="py-3 px-2 whitespace-nowrap"><Price price={p.price} compareAt={p.compare_at_price} size="sm" className="flex-col sm:flex-row" /></td>
                 <td className="py-3 px-2 hidden md:table-cell">
                   {p.is_featured ? <Star size={16} className="text-brand-gold fill-brand-gold" /> : '—'}
                 </td>

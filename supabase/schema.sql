@@ -35,6 +35,7 @@ CREATE TABLE products (
   slug         TEXT NOT NULL UNIQUE,
   description  TEXT,
   price        NUMERIC(10, 2) NOT NULL,
+  compare_at_price NUMERIC(10, 2) CHECK (compare_at_price IS NULL OR compare_at_price > 0), -- optional "old price", shown struck through
   category     TEXT[] NOT NULL DEFAULT '{women}' CHECK (category <@ ARRAY['women', 'men']::TEXT[] AND array_length(category, 1) > 0),
   subcategory  TEXT,
   images       TEXT[] DEFAULT '{}',

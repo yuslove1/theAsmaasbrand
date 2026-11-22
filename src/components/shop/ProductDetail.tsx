@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import type { Product } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
+import Price, { discountPercent, hasDiscount } from '@/components/ui/Price'
 
 interface Props { product: Product; related: Product[] }
 
@@ -100,9 +101,14 @@ export default function ProductDetail({ product, related }: Props) {
               {[product.category.join(', '), product.subcategory?.replace(/-/g, ' ')].filter(Boolean).join(' · ')}
             </p>
             <h1 className="font-display text-3xl sm:text-4xl text-brand-navy mb-3">{product.name}</h1>
-            <p className="font-body font-bold text-2xl text-brand-wine mb-4">
-              ₦{product.price.toLocaleString()}
-            </p>
+            <div className="mb-4">
+              <Price price={product.price} compareAt={product.compare_at_price} size="lg" />
+              {hasDiscount(product.price, product.compare_at_price) && (
+                <p className="inline-block mt-2 bg-brand-gold/15 text-brand-navy text-xs font-body font-semibold tracking-wide px-2 py-1">
+                  You save ₦{(Number(product.compare_at_price) - Number(product.price)).toLocaleString()} ({discountPercent(product.price, product.compare_at_price)}% off)
+                </p>
+              )}
+            </div>
             <div className="w-12 h-0.5 bg-brand-gold mb-5" />
             <p className="text-brand-navy/60 font-body text-sm leading-relaxed mb-8 whitespace-pre-line">
               {product.description}
@@ -196,9 +202,7 @@ export default function ProductDetail({ product, related }: Props) {
                   </div>
                   <div className="p-3 border border-t-0 border-brand-stone">
                     <p className="font-display text-base text-brand-navy">{p.name}</p>
-                    <p className="text-brand-wine text-sm font-body font-semibold mt-1">
-                      ₦{p.price.toLocaleString()}
-                    </p>
+                    <Price price={p.price} compareAt={p.compare_at_price} size="sm" className="mt-1" />
                   </div>
                 </Link>
                 </StaggerItem>

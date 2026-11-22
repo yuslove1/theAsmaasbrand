@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import Price from '@/components/ui/Price'
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, updateNote, total, clearCart } = useCart()
@@ -66,9 +67,7 @@ export default function CartPage() {
                     </button>
                   </div>
 
-                  <p className="font-body font-semibold text-brand-wine mt-1">
-                    ₦{product.price.toLocaleString()}
-                  </p>
+                  <Price price={product.price} compareAt={product.compare_at_price} className="mt-1" />
 
                   {/* Note */}
                   <textarea

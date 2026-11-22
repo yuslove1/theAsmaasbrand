@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import type { Product, Category } from '@/types'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Reveal } from '@/components/ui/Motion'
+import Price, { DiscountBadge } from '@/components/ui/Price'
 
 interface Props {
   products: Product[]
@@ -30,6 +31,7 @@ function ProductCard({ product }: { product: Product }) {
         />
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          <DiscountBadge price={product.price} compareAt={product.compare_at_price} />
           {product.is_featured && (
             <span className="bg-brand-wine text-white text-[10px] tracking-widest uppercase px-2 py-0.5 font-body w-fit">
               Featured
@@ -70,9 +72,7 @@ function ProductCard({ product }: { product: Product }) {
           {product.subcategory}
         </p>
         <div className="flex items-center justify-between mt-2">
-          <p className="font-body font-semibold text-brand-wine">
-            ₦{product.price.toLocaleString()}
-          </p>
+          <Price price={product.price} compareAt={product.compare_at_price} />
           {product.images.length > 1 && (
             <span className="text-brand-navy/30 text-[10px] font-body">
               {product.images.length} photos

@@ -10,6 +10,24 @@ function slugify(name: string): string {
     .replace(/(^-|-$)/g, '')
 }
 
+// Normalise the optional "old price". Returns an error message, or null when OK.
+// Empty → null (no discount). When set it must be higher than the current price.
+function normaliseOldPrice(body: Record<string, any>): string | null {
+  if (!('compare_at_price' in body)) return null
+  const raw = body.compare_at_price
+  if (raw === '' || raw === null || raw === undefined) {
+    body.compare_at_price = null
+    return null
+  }
+  const oldPrice = Number(raw)
+  if (!Number.isFinite(oldPrice) || oldPrice <= 0) return 'Old price must be a positive number'
+  if (body.price !== undefined && !(oldPrice > Number(body.price))) {
+    return 'Old price must be higher than the current price (or leave it empty)'
+  }
+  body.compare_at_price = oldPrice
+  return null
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const gender = searchParams.get('gender')
@@ -33,6 +51,8 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json()
   if (typeof body.name === 'string') body.name = body.name.trim()
+  const oldPriceError = normaliseOldPrice(body)
+  if (oldPriceError) return NextResponse.json({ error: oldPriceError }, { status: 400 })
   const db = supabaseAdmin()
 
   const slug = slugify(body.name) + '-' + Date.now()
@@ -54,6 +74,8 @@ export async function PUT(req: NextRequest) {
 
   const body = await req.json()
   if (typeof body.name === 'string') body.name = body.name.trim()
+  const oldPriceError = normaliseOldPrice(body)
+  if (oldPriceError) return NextResponse.json({ error: oldPriceError }, { status: 400 })
   const { id, ...rest } = body
   const db = supabaseAdmin()
 

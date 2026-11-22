@@ -5,6 +5,7 @@ import { Share2, ArrowRight, ExternalLink } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Product } from '@/types'
 import { Reveal, Stagger, StaggerItem } from '@/components/ui/Motion'
+import Price, { DiscountBadge } from '@/components/ui/Price'
 
 interface Props {
   products: Product[]
@@ -32,10 +33,11 @@ function ProductCard({ product }: { product: Product }) {
         </div>
 
         {/* Featured badge */}
-        <div className="absolute top-3 left-3">
-          <span className="bg-brand-wine text-white text-[10px] tracking-widest uppercase px-2 py-1 font-body">
+        <div className="absolute top-3 left-3 flex flex-col gap-1.5">
+          <span className="bg-brand-wine text-white text-[10px] tracking-widest uppercase px-2 py-1 font-body w-fit">
             Featured
           </span>
+          <DiscountBadge price={product.price} compareAt={product.compare_at_price} />
         </div>
       </div>
 
@@ -43,9 +45,7 @@ function ProductCard({ product }: { product: Product }) {
         <h3 className="font-display text-lg text-brand-navy">{product.name}</h3>
         <p className="text-brand-navy/50 text-xs mt-1 font-body line-clamp-2">{product.description}</p>
         <div className="flex items-center justify-between mt-3">
-          <p className="font-body font-semibold text-brand-wine">
-            ₦{product.price.toLocaleString()}
-          </p>
+          <Price price={product.price} compareAt={product.compare_at_price} />
           <Link
             href={`/shop/${product.slug}`}
             className="text-brand-gold text-xs tracking-wider font-body hover:text-brand-wine transition-colors"

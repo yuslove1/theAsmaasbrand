@@ -4,6 +4,7 @@ import Link from 'next/link'
 import type { Product } from '@/types'
 import ShareButton from '@/components/ui/ShareButton'
 import { Stagger, StaggerItem } from '@/components/ui/Motion'
+import Price, { DiscountBadge } from '@/components/ui/Price'
 
 interface Props { params: { token?: string[] } }
 
@@ -104,14 +105,13 @@ export default async function FeaturedPage({ params }: Props) {
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
+                  <DiscountBadge price={product.price} compareAt={product.compare_at_price} className="absolute top-3 left-3" />
                 </div>
                 <div className="p-4 border border-t-0 border-brand-stone">
                   <h3 className="font-display text-base text-brand-navy">{product.name}</h3>
                   <p className="text-brand-navy/40 text-xs font-body mt-1 line-clamp-2">{product.description}</p>
                   <div className="flex items-center justify-between mt-3">
-                    <p className="font-body font-semibold text-brand-wine text-sm">
-                      ₦{product.price.toLocaleString()}
-                    </p>
+                    <Price price={product.price} compareAt={product.compare_at_price} size="sm" />
                     <span className="text-brand-gold text-xs font-body tracking-wider">Order →</span>
                   </div>
                 </div>
