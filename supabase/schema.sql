@@ -119,7 +119,7 @@ CREATE TABLE promo_banner (
   popup_image_url    TEXT    NOT NULL DEFAULT '',
   popup_link         TEXT    NOT NULL DEFAULT '',
   popup_is_active    BOOLEAN NOT NULL DEFAULT FALSE,
-  popup_repeat_hours INTEGER NOT NULL DEFAULT 6 CHECK (popup_repeat_hours BETWEEN 1 AND 720),
+  popup_repeat_minutes INTEGER NOT NULL DEFAULT 5 CHECK (popup_repeat_minutes BETWEEN 1 AND 1440),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

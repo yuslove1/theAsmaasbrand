@@ -97,7 +97,7 @@ export interface PromoBanner {
   popup_image_url: string
   popup_link: string
   popup_is_active: boolean
-  popup_repeat_hours: number
+  popup_repeat_minutes: number
   updated_at: string
 }
 

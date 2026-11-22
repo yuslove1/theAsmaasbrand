@@ -6,13 +6,13 @@ import { Upload, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 const REPEAT_OPTIONS = [
-  { hours: 1, label: 'Every hour' },
-  { hours: 3, label: 'Every 3 hours' },
-  { hours: 6, label: 'Every 6 hours' },
-  { hours: 12, label: 'Every 12 hours' },
-  { hours: 24, label: 'Once a day' },
-  { hours: 72, label: 'Every 3 days' },
-  { hours: 168, label: 'Once a week' },
+  { minutes: 1, label: 'Every 1 minute' },
+  { minutes: 2, label: 'Every 2 minutes' },
+  { minutes: 3, label: 'Every 3 minutes' },
+  { minutes: 5, label: 'Every 5 minutes' },
+  { minutes: 10, label: 'Every 10 minutes' },
+  { minutes: 15, label: 'Every 15 minutes' },
+  { minutes: 30, label: 'Every 30 minutes' },
 ]
 
 export default function AdminPromo() {
@@ -23,7 +23,7 @@ export default function AdminPromo() {
   const [popupImage, setPopupImage] = useState('')
   const [popupLink, setPopupLink] = useState('')
   const [popupActive, setPopupActive] = useState(false)
-  const [repeatHours, setRepeatHours] = useState(6)
+  const [repeatMinutes, setRepeatMinutes] = useState(5)
 
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -39,7 +39,7 @@ export default function AdminPromo() {
         setPopupImage(data.popup_image_url || '')
         setPopupLink(data.popup_link || '')
         setPopupActive(!!data.popup_is_active)
-        setRepeatHours(data.popup_repeat_hours || 6)
+        setRepeatMinutes(data.popup_repeat_minutes || 5)
       })
       .finally(() => setLoading(false))
   }, [])
@@ -83,7 +83,7 @@ export default function AdminPromo() {
           popup_image_url: popupImage,
           popup_link: popupLink,
           popup_is_active: popupActive,
-          popup_repeat_hours: repeatHours,
+          popup_repeat_minutes: repeatMinutes,
         }),
       })
       const data = await res.json().catch(() => ({}))
@@ -115,8 +115,9 @@ export default function AdminPromo() {
           <div>
             <h2 className="font-display text-xl text-brand-navy">Promo Popup</h2>
             <p className="text-brand-navy/50 text-xs font-body mt-1">
-              Pops up over the website a few seconds after a visitor arrives. They close it with the ✕ button,
-              and it comes back after the time you choose below. It never shows on the cart or checkout pages.
+              Pops up every time someone opens the website, a few seconds after they arrive. They close it with
+              the ✕ button, and while they keep browsing it pops up again after the time you choose below.
+              It never shows on the cart or checkout pages.
             </p>
           </div>
 
@@ -174,17 +175,17 @@ export default function AdminPromo() {
           <div>
             <label className={labelCls}>Show Again</label>
             <select
-              value={repeatHours}
-              onChange={(e) => setRepeatHours(Number(e.target.value))}
+              value={repeatMinutes}
+              onChange={(e) => setRepeatMinutes(Number(e.target.value))}
               className="input-field"
             >
               {REPEAT_OPTIONS.map((o) => (
-                <option key={o.hours} value={o.hours}>{o.label}</option>
+                <option key={o.minutes} value={o.minutes}>{o.label}</option>
               ))}
             </select>
             <p className="text-brand-navy/40 text-xs font-body mt-1">
-              How long to wait before showing it again to someone who closed it. When you save a new picture,
-              everyone sees it right away.
+              How long to wait before showing it again to someone who closed it and is still on the site.
+              Anyone who opens the website again later sees it straight away.
             </p>
           </div>
 

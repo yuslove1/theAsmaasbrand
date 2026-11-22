@@ -6,7 +6,7 @@ export interface PublicPromo {
   popup: {
     image_url: string
     link: string
-    repeat_hours: number
+    repeat_minutes: number
     version: string
   } | null
 }

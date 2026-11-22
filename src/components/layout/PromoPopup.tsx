@@ -8,17 +8,20 @@ import { X } from 'lucide-react'
 import { getPublicPromo, type PublicPromo } from '@/lib/promoClient'
 
 const STORAGE_KEY = 'asmaa-promo-popup'
-const FIRST_SHOW_DELAY_MS = 4000
-const RECHECK_EVERY_MS = 60_000
+const FIRST_SHOW_DELAY_MS = 3000
+const RECHECK_EVERY_MS = 15_000
 
 // Don't interrupt people while they're paying or working in admin
 const HIDDEN_ON = ['/admin', '/checkout', '/cart']
 
 type Seen = { version: string; closedAt: number }
 
+// sessionStorage lasts only for this visit (it's cleared when the tab is closed), so the
+// popup shows every time someone opens the website, then repeats every N minutes while
+// they keep browsing.
 function readSeen(): Seen | null {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY)
+    const raw = sessionStorage.getItem(STORAGE_KEY)
     return raw ? JSON.parse(raw) : null
   } catch {
     return null
@@ -27,14 +30,14 @@ function readSeen(): Seen | null {
 
 function writeSeen(seen: Seen) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(seen))
+    sessionStorage.setItem(STORAGE_KEY, JSON.stringify(seen))
   } catch {}
 }
 
 function isDue(popup: NonNullable<PublicPromo['popup']>): boolean {
   const seen = readSeen()
   if (!seen || seen.version !== popup.version) return true
-  return Date.now() - seen.closedAt >= popup.repeat_hours * 60 * 60 * 1000
+  return Date.now() - seen.closedAt >= popup.repeat_minutes * 60 * 1000
 }
 
 export default function PromoPopup() {
@@ -48,8 +51,8 @@ export default function PromoPopup() {
     getPublicPromo().then((data) => setPopup(data?.popup ?? null))
   }, [])
 
-  // Show a few seconds after arriving, then check again every minute so it comes back
-  // "once in a while" for visitors who stay on the site longer than the repeat time.
+  // Show a few seconds after arriving, then keep checking so it comes back every
+  // N minutes (set in admin) for visitors who stay on the site.
   useEffect(() => {
     if (!popup || hidden || open) return
     const tryOpen = () => { if (isDue(popup)) setOpen(true) }

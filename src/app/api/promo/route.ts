@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
       ? {
           image_url: data.popup_image_url,
           link: data.popup_link || '',
-          repeat_hours: data.popup_repeat_hours || 6,
+          repeat_minutes: data.popup_repeat_minutes || 5,
           // Changes whenever the admin saves, so a new promo shows even to people who closed the old one
           version: data.updated_at,
         }
@@ -56,9 +56,9 @@ export async function PUT(req: NextRequest) {
   if (!isSafeLink(popupLink)) {
     return NextResponse.json({ error: 'Popup link must be a web address (https://…) or a site path like /shop' }, { status: 400 })
   }
-  const repeatHours = Math.round(Number(body.popup_repeat_hours ?? 6))
-  if (!Number.isFinite(repeatHours) || repeatHours < 1 || repeatHours > 720) {
-    return NextResponse.json({ error: 'Show-again time must be between 1 and 720 hours' }, { status: 400 })
+  const repeatMinutes = Math.round(Number(body.popup_repeat_minutes ?? 5))
+  if (!Number.isFinite(repeatMinutes) || repeatMinutes < 1 || repeatMinutes > 1440) {
+    return NextResponse.json({ error: 'Show-again time must be between 1 and 1440 minutes' }, { status: 400 })
   }
 
   const db = supabaseAdmin()
@@ -70,7 +70,7 @@ export async function PUT(req: NextRequest) {
       popup_image_url: typeof body.popup_image_url === 'string' ? body.popup_image_url : '',
       popup_link: popupLink,
       popup_is_active: !!body.popup_is_active,
-      popup_repeat_hours: repeatHours,
+      popup_repeat_minutes: repeatMinutes,
       updated_at: new Date().toISOString(),
     })
     .eq('id', 'main')
