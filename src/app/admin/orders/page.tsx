@@ -1,10 +1,8 @@
 'use client'
 import { useState, useEffect } from 'react'
-import { ChevronDown, ChevronUp, Phone, Mail, MapPin } from 'lucide-react'
+import { ChevronDown, ChevronUp, Phone, Mail, MapPin, FileText } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Order } from '@/types'
-
-const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || ''
 
 const STATUS_COLORS: Record<string, string> = {
   pending:    'bg-yellow-100 text-yellow-700',
@@ -41,7 +39,7 @@ export default function AdminOrders() {
     try {
       const res = await fetch('/api/orders', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id, [field]: value }),
       })
       if (!res.ok) throw new Error()
@@ -102,7 +100,7 @@ export default function AdminOrders() {
                   </span>
                   {order.payment_reported_at && order.payment_status === 'pending' && (
                     <span className="px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-full bg-blue-100 text-blue-700">
-                      Customer says paid
+                      {order.payment_receipt ? 'Receipt uploaded' : 'Customer says paid'}
                     </span>
                   )}
                 </div>
@@ -186,6 +184,20 @@ export default function AdminOrders() {
                       Update Status
                     </p>
                     <div className="space-y-2">
+                      {order.payment_receipt_url ? (
+                        <a
+                          href={order.payment_receipt_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-full flex items-center justify-center gap-2 py-2 text-xs uppercase tracking-wider rounded border border-blue-600 text-blue-700 hover:bg-blue-50 transition-colors"
+                        >
+                          <FileText size={14} /> View Payment Receipt
+                        </a>
+                      ) : (
+                        order.payment_status === 'pending' && (
+                          <p className="text-xs font-body text-brand-navy/40">No payment receipt uploaded yet.</p>
+                        )
+                      )}
                       <div>
                         <label className="text-xs text-brand-navy/50 font-body mb-1 block">Order Status</label>
                         <select

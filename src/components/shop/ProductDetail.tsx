@@ -1,4 +1,5 @@
 'use client'
+import { CONTACT_WHATSAPP } from '@/lib/contact'
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -143,7 +144,7 @@ export default function ProductDetail({ product, related }: Props) {
             <div className="mt-6 p-4 border border-brand-stone bg-white">
               <p className="text-brand-navy/50 text-xs font-body leading-relaxed">
                 We deliver to all states in Nigeria. only bank transfer payment is currently accepted. Please make payment to the account details provided at checkout.
-                Order confirmation will be sent to your email. WhatsApp: 08143378187
+                Order confirmation will be sent to your email. WhatsApp: {CONTACT_WHATSAPP}
               </p>
             </div>
           </div>

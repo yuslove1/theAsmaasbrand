@@ -5,8 +5,6 @@ import { Star, StarOff, Share2, Copy, Check } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Product } from '@/types'
 
-const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || ''
-
 export default function AdminFeatured() {
   const [products, setProducts] = useState<Product[]>([])
   const [shareToken, setShareToken] = useState('')
@@ -35,7 +33,7 @@ export default function AdminFeatured() {
     try {
       const res = await fetch('/api/products', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: product.id, is_featured: !product.is_featured }),
       })
       if (!res.ok) throw new Error()

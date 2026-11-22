@@ -62,3 +62,10 @@ export async function verifySessionToken(token: string | undefined | null): Prom
     return false
   }
 }
+
+// Route-handler guard: true only when the request carries a valid admin session cookie.
+// The cookie is httpOnly + SameSite=Lax, so it is never readable from page JS and is not
+// sent on cross-site POST/PUT/DELETE requests.
+export async function isAdminRequest(req: { cookies: { get(name: string): { value: string } | undefined } }): Promise<boolean> {
+  return verifySessionToken(req.cookies.get(ADMIN_SESSION_COOKIE)?.value)
+}

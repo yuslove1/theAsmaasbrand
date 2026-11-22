@@ -1,9 +1,11 @@
 'use client'
+import { CONTACT_WHATSAPP } from '@/lib/contact'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { ShoppingBag, Menu, X, Search } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
+import { getPublicPromo } from '@/lib/promoClient'
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
@@ -24,12 +26,9 @@ export default function Navbar() {
   }, [])
 
   useEffect(() => {
-    fetch('/api/promo')
-      .then((r) => r.json())
-      .then((data) => {
-        if (data.is_active && data.message?.trim()) setPromoMessage(data.message)
-      })
-      .catch(() => {})
+    getPublicPromo().then((data) => {
+      if (data?.is_active && data.message?.trim()) setPromoMessage(data.message)
+    })
   }, [])
 
   if (isAdmin) return null
@@ -45,7 +44,7 @@ export default function Navbar() {
       {/* Top bar */}
       <div className="bg-brand-navy text-brand-gold text-center py-1.5 text-[10px] sm:text-xs tracking-widest uppercase font-body px-4">
         <span className="arabic-accent mr-2 text-base hidden sm:inline">بسم الله</span>
-        {promoMessage || 'Free delivery within Lagos · WhatsApp: 08143378187'}
+        {promoMessage || `Free delivery within Lagos · WhatsApp: ${CONTACT_WHATSAPP}`}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

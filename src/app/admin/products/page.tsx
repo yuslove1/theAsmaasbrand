@@ -5,10 +5,8 @@ import { Plus, Pencil, Trash2, Upload, X, Star } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Product, Category } from '@/types'
 
-const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || ''
-
 function headers() {
-  return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY }
+  return { 'Content-Type': 'application/json' }
 }
 
 interface ProductFormData {
@@ -62,7 +60,6 @@ export default function AdminProducts() {
         fd.append('file', file)
         const res = await fetch('/api/upload', {
           method: 'POST',
-          headers: { 'x-admin-key': ADMIN_KEY },
           body: fd,
         })
         const data = await res.json()

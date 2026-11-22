@@ -46,24 +46,22 @@ export default function CheckoutPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           customer: form,
+          // Prices are looked up on the server; only send what the buyer chose
           items: items.map(({ product, quantity, note }) => ({
             product_id: product.id,
-            product_name: product.name,
-            product_image: product.images[0] || '',
-            price: product.price,
             quantity,
             note,
           })),
-          subtotal: total(),
-          total: total(),
         }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error)
       clearCart()
-      router.push(`/checkout/success?order=${data.order_number}`)
-    } catch (err) {
-      toast.error('Failed to place order. Please try again.')
+      router.push(
+        `/checkout/success?order=${encodeURIComponent(data.order_number)}&id=${encodeURIComponent(data.id)}`
+      )
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to place order. Please try again.')
     } finally {
       setLoading(false)
     }

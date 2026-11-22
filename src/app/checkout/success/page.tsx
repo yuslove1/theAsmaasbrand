@@ -1,9 +1,10 @@
 import Link from 'next/link'
 import MarkPaidButton from '@/components/checkout/MarkPaidButton'
 import { supabaseAdmin } from '@/lib/supabase'
+import { CONTACT_WHATSAPP, CONTACT_WHATSAPP_LINK } from '@/lib/contact'
 import type { PaymentAccount } from '@/types'
 
-interface Props { searchParams: { order?: string } }
+interface Props { searchParams: { order?: string; id?: string } }
 
 async function getActiveAccounts(): Promise<PaymentAccount[]> {
   const db = supabaseAdmin()
@@ -15,8 +16,28 @@ async function getActiveAccounts(): Promise<PaymentAccount[]> {
   return data || []
 }
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+// Only resolves when both the order number and its private id match
+async function getPaymentState(orderNumber?: string, id?: string) {
+  if (!orderNumber || !id || !UUID_RE.test(id)) return null
+  const db = supabaseAdmin()
+  const { data } = await db
+    .from('orders')
+    .select('payment_status, payment_reported_at')
+    .eq('id', id)
+    .eq('order_number', orderNumber)
+    .maybeSingle()
+  if (!data) return null
+  if (data.payment_status === 'confirmed') return 'confirmed' as const
+  return data.payment_reported_at ? ('reported' as const) : ('pending' as const)
+}
+
 export default async function SuccessPage({ searchParams }: Props) {
-  const accounts = await getActiveAccounts()
+  const [accounts, paymentState] = await Promise.all([
+    getActiveAccounts(),
+    getPaymentState(searchParams.order, searchParams.id),
+  ])
 
   return (
     <div className="min-h-screen bg-brand-cream pt-28 flex items-center justify-center px-6">
@@ -44,8 +65,8 @@ export default async function SuccessPage({ searchParams }: Props) {
         <p className="text-brand-navy/50 font-body text-sm mb-6 leading-relaxed">
           Your order will be processed once payment is confirmed.
           If you have questions, reach us on WhatsApp:{' '}
-          <a href="https://wa.me/2348143378187" className="text-brand-wine underline">
-            08143378187
+          <a href={CONTACT_WHATSAPP_LINK} className="text-brand-wine underline">
+            {CONTACT_WHATSAPP}
           </a>
         </p>
 
@@ -66,9 +87,13 @@ export default async function SuccessPage({ searchParams }: Props) {
           </div>
         )}
 
-        {searchParams.order && (
+        {searchParams.order && searchParams.id && paymentState && (
           <div className="mb-6">
-            <MarkPaidButton orderNumber={searchParams.order} />
+            <MarkPaidButton
+              orderNumber={searchParams.order}
+              orderId={searchParams.id}
+              initialStatus={paymentState}
+            />
           </div>
         )}
 

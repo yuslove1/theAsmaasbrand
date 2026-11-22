@@ -21,7 +21,7 @@ const navItems = [
   { href: '/admin/featured', icon: Star, label: 'Featured Items' },
   { href: '/admin/orders', icon: ShoppingCart, label: 'Orders' },
   { href: '/admin/payment-accounts', icon: Landmark, label: 'Payment Accounts' },
-  { href: '/admin/promo', icon: Megaphone, label: 'Promo Banner' },
+  { href: '/admin/promo', icon: Megaphone, label: 'Promotions' },
 ]
 
 interface Props {

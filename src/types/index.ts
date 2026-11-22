@@ -60,6 +60,8 @@ export interface Order {
   payment_method: 'bank_transfer'
   payment_status: 'pending' | 'confirmed' | 'failed'
   payment_reported_at?: string | null
+  payment_receipt?: PaymentReceipt | null
+  payment_receipt_url?: string | null   // signed view link, added by the admin API only
   order_status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'
   notes?: string
   created_at: string
@@ -92,7 +94,19 @@ export interface PromoBanner {
   id: string
   message: string
   is_active: boolean
+  popup_image_url: string
+  popup_link: string
+  popup_is_active: boolean
+  popup_repeat_hours: number
   updated_at: string
+}
+
+// ─── Payment receipt (private Cloudinary upload) ────────────────────────────
+export interface PaymentReceipt {
+  public_id: string
+  resource_type: 'image' | 'raw'
+  format: string
+  uploaded_at: string
 }
 
 // ─── Admin ──────────────────────────────────────────────────────────────────

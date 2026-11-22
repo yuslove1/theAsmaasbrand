@@ -1,34 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { v2 as cloudinary } from 'cloudinary'
+import { isAdminRequest } from '@/lib/adminAuth'
+import { cloudinary, fileToDataUri } from '@/lib/cloudinaryServer'
 
-cloudinary.config({
-  cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-})
+// Admin image uploads. `kind` picks how the image is stored:
+//  - product (default): cropped to the 3:4 product-card shape
+//  - promo: kept at its own shape (popup ads), only scaled down if very large
+const UPLOAD_KINDS = {
+  product: {
+    folder: 'asmaa-brand/products',
+    transformation: [{ width: 800, height: 1067, crop: 'fill', quality: 'auto' }],
+  },
+  promo: {
+    folder: 'asmaa-brand/promos',
+    transformation: [{ width: 1200, height: 1200, crop: 'limit', quality: 'auto' }],
+  },
+} as const
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get('x-admin-key')
-  if (auth !== process.env.ADMIN_SECRET_KEY) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
     const formData = await req.formData()
-    const file = formData.get('file') as File
-    if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    const file = formData.get('file')
+    if (!(file instanceof File)) return NextResponse.json({ error: 'No file provided' }, { status: 400 })
+    if (!file.type.startsWith('image/')) {
+      return NextResponse.json({ error: 'Please upload an image file' }, { status: 400 })
+    }
 
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-    const base64 = `data:${file.type};base64,${buffer.toString('base64')}`
+    const kind = formData.get('kind') === 'promo' ? 'promo' : 'product'
+    const buffer = Buffer.from(await file.arrayBuffer())
 
-    const result = await cloudinary.uploader.upload(base64, {
-      folder: 'asmaa-brand/products',
-      transformation: [{ width: 800, height: 1067, crop: 'fill', quality: 'auto' }],
+    const result = await cloudinary.uploader.upload(fileToDataUri(buffer, file.type), {
+      folder: UPLOAD_KINDS[kind].folder,
+      transformation: [...UPLOAD_KINDS[kind].transformation],
     })
 
     return NextResponse.json({ url: result.secure_url, public_id: result.public_id })
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    console.error('Upload error:', err)
+    return NextResponse.json({ error: err.message || 'Upload failed' }, { status: 500 })
   }
 }

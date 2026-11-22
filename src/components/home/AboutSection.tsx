@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL, CONTACT_WHATSAPP, CONTACT_WHATSAPP_LINK } from '@/lib/contact'
 import Image from 'next/image'
 import { MapPin, Mail, Phone, MessageCircle } from 'lucide-react'
 
@@ -98,8 +99,8 @@ export default function AboutSection() {
               {
                 icon: <MessageCircle size={28} className="text-brand-gold" />,
                 title: 'WhatsApp',
-                lines: ['08143378187'],
-                href: 'https://wa.me/2348143378187',
+                lines: [CONTACT_WHATSAPP],
+                href: CONTACT_WHATSAPP_LINK,
               },
               {
                 icon: <Phone size={28} className="text-brand-gold" />,
@@ -110,8 +111,8 @@ export default function AboutSection() {
               {
                 icon: <Mail size={28} className="text-brand-gold" />,
                 title: 'Email Us',
-                lines: ['asmaurufai37@gmail.com'],
-                href: 'mailto:asmaurufai37@gmail.com',
+                lines: [CONTACT_EMAIL],
+                href: `mailto:${CONTACT_EMAIL}`,
               },
             ].map(({ icon, title, lines, href }) => (
               <div key={title} className="bg-white p-6 border border-brand-stone text-center group hover:border-brand-gold transition-colors duration-300">

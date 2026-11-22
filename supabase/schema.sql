@@ -68,6 +68,7 @@ CREATE TABLE orders (
   payment_method    TEXT DEFAULT 'bank_transfer',
   payment_status    TEXT DEFAULT 'pending' CHECK (payment_status IN ('pending', 'confirmed', 'failed')),
   payment_reported_at TIMESTAMPTZ,
+  payment_receipt   JSONB,
   order_status      TEXT DEFAULT 'pending' CHECK (order_status IN ('pending', 'processing', 'shipped', 'delivered', 'cancelled')),
   notes             TEXT,
   created_at        TIMESTAMPTZ DEFAULT NOW(),
@@ -115,6 +116,10 @@ CREATE TABLE promo_banner (
   id         TEXT PRIMARY KEY DEFAULT 'main',
   message    TEXT NOT NULL DEFAULT '',
   is_active  BOOLEAN DEFAULT FALSE,
+  popup_image_url    TEXT    NOT NULL DEFAULT '',
+  popup_link         TEXT    NOT NULL DEFAULT '',
+  popup_is_active    BOOLEAN NOT NULL DEFAULT FALSE,
+  popup_repeat_hours INTEGER NOT NULL DEFAULT 6 CHECK (popup_repeat_hours BETWEEN 1 AND 720),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 

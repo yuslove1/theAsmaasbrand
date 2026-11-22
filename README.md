@@ -101,14 +101,15 @@ RESEND_API_KEY=re_xxxx
 ADMIN_EMAIL=asmaurufai37@gmail.com
 
 NEXT_PUBLIC_APP_URL=http://localhost:3000
-ADMIN_SECRET_KEY=choose_a_strong_random_key_here
 
-# Also add this for admin panel actions from browser:
-NEXT_PUBLIC_ADMIN_KEY=same_value_as_ADMIN_SECRET_KEY
+# Admin login — see .env.local.example for how to generate these
+ADMIN_LOGIN_EMAIL=you@example.com
+ADMIN_LOGIN_PASSWORD_HASH_B64=base64_of_bcrypt_hash
+ADMIN_SESSION_SECRET=output_of_openssl_rand_hex_32
 ```
 
-> ⚠️ **NEXT_PUBLIC_ADMIN_KEY** must match **ADMIN_SECRET_KEY** exactly.
-> For production, implement proper Supabase Auth instead of the secret key approach.
+> Admin API routes are protected by the signed, httpOnly `admin_session` cookie set at `/admin/login`.
+> No admin secret is ever exposed to the browser.
 
 ### Step 6 — Run
 

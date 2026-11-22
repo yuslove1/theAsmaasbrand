@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { isAdminRequest } from '@/lib/adminAuth'
 import { supabaseAdmin } from '@/lib/supabase'
 
 function slugify(name: string): string {
@@ -13,8 +14,7 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const auth = req.headers.get('x-admin-key')
-  if (auth !== process.env.ADMIN_SECRET_KEY) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
@@ -33,8 +33,7 @@ export async function POST(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  const auth = req.headers.get('x-admin-key')
-  if (auth !== process.env.ADMIN_SECRET_KEY) {
+  if (!(await isAdminRequest(req))) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 

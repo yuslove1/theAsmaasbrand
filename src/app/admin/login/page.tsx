@@ -25,7 +25,9 @@ function LoginForm() {
         const { error } = await res.json().catch(() => ({ error: 'Invalid email or password' }))
         throw new Error(error)
       }
-      router.push(searchParams.get('next') || '/admin')
+      // Only follow same-site admin paths, never an external URL from the query string
+      const next = searchParams.get('next') || ''
+      router.push(next.startsWith('/admin') && !next.startsWith('//') ? next : '/admin')
       router.refresh()
     } catch (err: any) {
       toast.error(err.message || 'Login failed')

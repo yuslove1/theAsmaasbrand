@@ -1,4 +1,5 @@
 'use client'
+import { CONTACT_EMAIL, CONTACT_WHATSAPP, CONTACT_WHATSAPP_LINK } from '@/lib/contact'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -68,13 +69,13 @@ export default function Footer() {
             <li>13 Shoyinka Street, Fadeyi, Lagos</li>
             <li>Lagos State University, Ojo, Lagos</li>
             <li>
-              <a href="mailto:asmaurufai37@gmail.com" className="hover:text-white transition-colors">
-                asmaurufai37@gmail.com
+              <a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-white transition-colors">
+                {CONTACT_EMAIL}
               </a>
             </li>
             <li>
-              <a href="https://wa.me/2348143378187" className="hover:text-white transition-colors">
-                WhatsApp: 08143378187
+              <a href={CONTACT_WHATSAPP_LINK} className="hover:text-white transition-colors">
+                WhatsApp: {CONTACT_WHATSAPP}
               </a>
             </li>
             <li>

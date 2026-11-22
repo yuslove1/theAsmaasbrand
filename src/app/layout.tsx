@@ -3,6 +3,7 @@ import '@/styles/globals.css'
 import { Toaster } from 'react-hot-toast'
 import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
+import PromoPopup from '@/components/layout/PromoPopup'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://theasmaasbrand.vercel.app'),
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Navbar />
         <main>{children}</main>
         <Footer />
+        <PromoPopup />
         <Toaster
           position="top-right"
           toastOptions={{

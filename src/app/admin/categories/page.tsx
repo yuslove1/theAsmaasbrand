@@ -4,10 +4,8 @@ import { Plus, Trash2, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import type { Category } from '@/types'
 
-const ADMIN_KEY = process.env.NEXT_PUBLIC_ADMIN_KEY || ''
-
 function headers() {
-  return { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_KEY }
+  return { 'Content-Type': 'application/json' }
 }
 
 export default function AdminCategories() {
