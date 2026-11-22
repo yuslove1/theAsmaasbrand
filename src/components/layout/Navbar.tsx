@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { ShoppingBag, Menu, X, Search } from 'lucide-react'
 import { useCart } from '@/hooks/useCart'
 import { getPublicPromo } from '@/lib/promoClient'
+import PromoTicker from './PromoTicker'
 import { AnimatePresence, motion } from 'framer-motion'
 
 export default function Navbar() {
@@ -43,9 +44,15 @@ export default function Navbar() {
       }`}
     >
       {/* Top bar */}
-      <div className="bg-brand-navy text-brand-gold text-center py-1.5 text-[10px] sm:text-xs tracking-widest uppercase font-body px-4">
-        <span className="arabic-accent mr-2 text-base hidden sm:inline">بسم الله</span>
-        {promoMessage || `Free delivery within Lagos · WhatsApp: ${CONTACT_WHATSAPP}`}
+      <div className="bg-brand-navy text-brand-gold py-1.5 text-[10px] sm:text-xs tracking-widest uppercase font-body">
+        {promoMessage ? (
+          <PromoTicker message={promoMessage} />
+        ) : (
+          <div className="text-center px-4">
+            <span className="arabic-accent mr-2 text-base hidden sm:inline">بسم الله</span>
+            Free delivery within Lagos · WhatsApp: {CONTACT_WHATSAPP}
+          </div>
+        )}
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

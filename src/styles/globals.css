@@ -109,3 +109,23 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Scrolling promo message in the top bar */
+.promo-ticker-track {
+  animation-name: promo-ticker;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.promo-ticker:hover .promo-ticker-track { animation-play-state: paused; }
+@keyframes promo-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+/* Soft fade at both edges so text slides in and out gently */
+.promo-ticker {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+@media (prefers-reduced-motion: reduce) {
+  .promo-ticker-track { animation: none !important; }
+}
